@@ -12,36 +12,13 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import ProductCard from '@/components/ProductCard';
+import Link from 'next/link';
+import { COLOR_MAP } from '@/lib/colorMap';
+
 
 const PAGE_SIZE = 12;
 
 // ── Color map (nombre → hex) ──────────────────────────────────────────────────
-export const COLOR_MAP = {
-  negro:       '#111111', black:    '#111111',
-  blanco:      '#ffffff', white:    '#ffffff',
-  rojo:        '#ef4444', red:      '#ef4444',
-  azul:        '#3b82f6', blue:     '#3b82f6',
-  verde:       '#22c55e', green:    '#22c55e',
-  amarillo:    '#eab308', yellow:   '#eab308',
-  naranja:     '#f97316', orange:   '#f97316',
-  rosa:        '#f9a8d4', pink:     '#f9a8d4',
-  violeta:     '#8b5cf6', purple:   '#8b5cf6',
-  lila:        '#c084fc',
-  gris:        '#9ca3af', grey:     '#9ca3af', gray: '#9ca3af',
-  marron:      '#92400e', marrón:   '#92400e', brown: '#92400e',
-  beige:       '#e8ddd4',
-  celeste:     '#7dd3fc',
-  bordo:       '#9f1239', burdeos:  '#9f1239',
-  camel:       '#c9a882',
-  chocolate:   '#3d2b1f',
-  arena:       '#d2b48c',
-  'rosa viejo':'#8b6f6f',
-  off_white:   '#f5f0eb',
-  crema:       '#faf0e6',
-  nude:        '#e8c9a0',
-  tostado:     '#b8843f',
-  animal:      '#c9a882', // print animal → acento
-};
 
 function getColorHex(nombre) {
   if (!nombre) return null;
@@ -890,7 +867,7 @@ export default function ProductosPage() {
       {/* Page header */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 16px 0' }}>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 12, flexWrap: 'wrap' }}>
-          <a href="/" style={{ fontSize: 11, fontFamily: 'var(--font-head)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', color: 'var(--muted)' }}>Home</a>
+          <Link href="/" style={{ fontSize: 11, fontFamily: 'var(--font-head)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', color: 'var(--muted)' }}>Home</Link>
           <ChevronRightIcon size={12} style={{ color: 'var(--muted)' }} />
           <span style={{ fontSize: 11, fontFamily: 'var(--font-head)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--primary)' }}>Catálogo</span>
         </nav>
