@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { LayoutDashboard, Package, Tag, ShoppingBag, Settings, LogOut, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const NAV = [
   { href: '/admin',            icon: LayoutDashboard, label: 'Dashboard'     },
@@ -17,8 +18,17 @@ const NAV = [
 function Logo() {
   return (
     <div className="px-6 py-5 border-b border-white/10">
-      <p className="text-[10px] tracking-[0.2em] uppercase text-white/35 mb-1">Panel Admin</p>
-      <p className="text-lg font-extrabold tracking-widest uppercase text-white">HOKY</p>
+      <p className="text-[10px] tracking-[0.2em] uppercase text-white mb-1">Panel Admin</p>
+      <div className="relative w-full h-10">
+        <Image
+          src="/logo-white-remove.png"
+          alt="CHLOE SHOWROOM"
+          width={100}
+          height={30}
+          className="object-contain object-left"
+          priority
+        />
+      </div>
     </div>
   );
 }
@@ -39,7 +49,7 @@ function NavLinks({ onNavigate }) {
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150 no-underline
                 ${activo
                   ? 'bg-white/10 text-white font-semibold'
-                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                  : 'text-white hover:text-white/80 hover:bg-white/5'
                 }`}
             >
               <Icon size={16} />
@@ -53,7 +63,7 @@ function NavLinks({ onNavigate }) {
         <Link
           href="/"
           onClick={onNavigate}
-          className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] text-white/40 hover:text-white/70 transition-all duration-150 no-underline"
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] text-white hover:text-white/70 transition-all duration-150 no-underline"
         >
           <LogOut size={16} />
           Ver tienda

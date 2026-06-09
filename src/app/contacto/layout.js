@@ -1,29 +1,27 @@
 // src/app/contacto/layout.js
-// Server component — maneja el metadata
-// La página tiene 'use client' para los hovers, así que el metadata va acá
 
 export const metadata = {
-  title:       'Contacto — Hoky Indumentaria',
-  description: 'Contactate con Hoky Indumentaria. WhatsApp, Instagram y local en Esquiú 620, Catamarca.',
-  keywords:    'hoky contacto, whatsapp hoky, local hoky catamarca, instagram hoky indumentaria',
+  title:       'Contacto — Chloe Showroom',
+  description: 'Contactate con Chloe Showroom. WhatsApp, Instagram y showroom en Alpatauca 870, San Fernando del Valle de Catamarca.',
+  keywords:    'chloe showroom contacto, whatsapp chloe showroom, showroom catamarca, instagram chloe showroom',
   openGraph: {
-    title:       'Contacto — Hoky Indumentaria',
-    description: 'Escribinos por WhatsApp o visitanos en Esquiú 620, Catamarca.',
+    title:       'Contacto — Chloe Showroom',
+    description: 'Escribinos por WhatsApp o visitanos en Alpatauca 870, Catamarca.',
     type:        'website',
     locale:      'es_AR',
-    siteName:    'Hoky Indumentaria',
+    siteName:    'Chloe Showroom',
     images: [{
-      url:    '/logo.jpeg',
+      url:    '/logo.jpg',
       width:  800,
       height: 800,
-      alt:    'Hoky Indumentaria',
+      alt:    'Chloe Showroom',
     }],
   },
   twitter: {
     card:        'summary',
-    title:       'Contacto — Hoky Indumentaria',
-    description: 'Escribinos por WhatsApp o visitanos en Esquiú 620, Catamarca.',
-    images:      ['/logo.jpeg'],
+    title:       'Contacto — Chloe Showroom',
+    description: 'Escribinos por WhatsApp o visitanos en Alpatauca 870, Catamarca.',
+    images:      ['/logo.jpg'],
   },
 };
 

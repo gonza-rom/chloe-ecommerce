@@ -1,19 +1,22 @@
+// src/app/nosotros/layout.js
+
 export const metadata = {
-  title:       'Nosotros — Hoky Indumentaria',
-  description: 'Conocé la historia de Hoky Indumentaria. Ropa urbana nacida en Catamarca, pensada para la calle.',
-  keywords:    'hoky indumentaria, quienes somos, historia, catamarca, ropa urbana',
+  title:       'Nosotros — Chloe Showroom',
+  description: 'Conocé la historia de Chloe Showroom. Boutique de moda femenina nacida en Catamarca, pensada para la mujer que transita la ciudad con estilo.',
+  keywords:    'chloe showroom, quienes somos, historia, catamarca, moda femenina, boutique catamarca',
   openGraph: {
-    title:       'Nosotros — Hoky Indumentaria',
-    description: 'Ropa urbana nacida en Catamarca, pensada para la calle.',
+    title:       'Nosotros — Chloe Showroom',
+    description: 'Boutique de moda femenina nacida en Catamarca. City Icons, Archive Editions & Night Collection.',
     type:        'website',
     locale:      'es_AR',
-    siteName:    'Hoky Indumentaria',
-    images: [{ url: '/logo.jpeg', width: 800, height: 800, alt: 'Hoky Indumentaria' }],
+    siteName:    'Chloe Showroom',
+    images: [{ url: '/logo.jpg', width: 800, height: 800, alt: 'Chloe Showroom' }],
   },
   twitter: {
     card:        'summary',
-    title:       'Nosotros — Hoky Indumentaria',
-    description: 'Ropa urbana nacida en Catamarca, pensada para la calle.',
+    title:       'Nosotros — Chloe Showroom',
+    description: 'Boutique de moda femenina nacida en Catamarca. City Icons, Archive Editions & Night Collection.',
+    images:      ['/logo.jpg'],
   },
 };
 

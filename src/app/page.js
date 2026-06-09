@@ -29,6 +29,13 @@ const HERO_SLIDES = [
   },
 ];
 
+const LOOK_VIDEOS = [
+  { id: 'vid1', src: '/video.mp4',  label: 'Look 01' },
+  { id: 'vid2', src: '/video2.mp4', label: 'Look 02' },
+  { id: 'vid3', src: '/video3.mp4', label: 'Look 03' },
+  { id: 'vid4', src: '/video4.mp4', label: 'Look 04' },
+];
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function fmtPrecio(n) {
@@ -41,19 +48,15 @@ function calcCuotas(precio, n = 3) {
   return fmtPrecio(precio / n);
 }
 
-// ── Sub-componentes ───────────────────────────────────────────────────────────
+// ── ProductCard ───────────────────────────────────────────────────────────────
 
 function ProductCard({ producto }) {
   const precio       = producto.precio ?? 0;
   const precioTransf = producto.precioTransferencia ?? precio * 0.8;
-  const cuota3       = precio / 3;
 
   return (
     <Link href={`/productos/${producto.id}`} className="group cursor-pointer block">
-      <div
-        className="relative overflow-hidden mb-3 md:mb-4 bg-surface-container-low"
-        style={{ aspectRatio: '3/4' }}
-      >
+      <div className="relative overflow-hidden mb-3 md:mb-4 bg-surface-container-low" style={{ aspectRatio: '3/4' }}>
         {producto.imagen ? (
           <Image
             src={producto.imagen}
@@ -99,6 +102,117 @@ function SkeletonCard() {
   );
 }
 
+// ── VideoCard — lazy load + play/pause ───────────────────────────────────────
+
+function VideoCard({ src, label }) {
+  const containerRef = useRef(null);
+  const videoRef     = useRef(null);
+  const [visible,  setVisible]  = useState(false);
+  const [playing,  setPlaying]  = useState(false);
+
+  // Observar cuando el componente entra al viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect(); // ya no necesitamos seguir observando
+        }
+      },
+      { rootMargin: '300px' }, // empieza a cargar 300px antes de que entre
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Cuando se monta el video en el DOM, lo reproducimos
+  useEffect(() => {
+    if (!visible || !videoRef.current) return;
+    videoRef.current.play()
+      .then(() => setPlaying(true))
+      .catch(() => {}); // el browser puede bloquear autoplay, no pasa nada
+  }, [visible]);
+
+  function togglePlay() {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play();  setPlaying(true);  }
+    else          { v.pause(); setPlaying(false); }
+  }
+
+  return (
+    <div ref={containerRef} className="relative" style={{ aspectRatio: '9/16' }}>
+      <div className="w-full h-full overflow-hidden bg-surface-container">
+
+        {/* Placeholder oscuro mientras el video no cargó */}
+        {!visible && (
+          <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+            <span className="material-symbols-outlined text-white/20 text-5xl">play_circle</span>
+          </div>
+        )}
+
+        {/* Video — solo se monta cuando está cerca del viewport */}
+        {visible && (
+          <video
+            ref={videoRef}
+            src={src}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover"
+            style={{ filter: 'grayscale(15%)', transition: 'filter 0.7s ease' }}
+            onMouseEnter={(e) => { e.currentTarget.style.filter = 'grayscale(0%)';   }}
+            onMouseLeave={(e) => { e.currentTarget.style.filter = 'grayscale(15%)';  }}
+          />
+        )}
+
+        {/* Overlay play/pause — siempre visible para poder interactuar */}
+        <button
+          onClick={togglePlay}
+          aria-label={playing ? 'Pausar video' : 'Reproducir video'}
+          className="absolute inset-0 flex items-center justify-center transition-colors duration-200"
+          style={{
+            background: playing ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.25)',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-white drop-shadow-lg"
+            style={{
+              fontSize: 'clamp(2rem,6vw,3.5rem)',
+              opacity: playing ? 0 : 1,
+              transition: 'opacity 0.2s',
+            }}
+          >
+            play_arrow
+          </span>
+        </button>
+
+        {/* Icono pausa en hover cuando está reproduciendo */}
+        {playing && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            <span
+              className="material-symbols-outlined text-white drop-shadow-lg"
+              style={{ fontSize: 'clamp(2rem,6vw,3.5rem)' }}
+            >
+              pause
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Label */}
+      <div className="absolute bottom-3 left-3 right-3">
+        <span className="bg-white px-2 py-0.5 font-label-md text-[10px] uppercase tracking-widest">
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ── Página principal ──────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -110,15 +224,14 @@ export default function Home() {
   const [loadingNight,   setLoadingNight]   = useState(true);
   const [loadingArchive, setLoadingArchive] = useState(true);
 
-  const videoRefs = useRef({});
   const autoTimer = useRef(null);
 
-  // ── Hero auto-slide ────────────────────────────────────────────────────────
+  // ── Hero auto-slide ───────────────────────────────────────────────────────
   const startAuto = useCallback(() => {
     clearInterval(autoTimer.current);
     autoTimer.current = setInterval(
       () => setSlideActual((s) => (s + 1) % HERO_SLIDES.length),
-      4500
+      4500,
     );
   }, []);
 
@@ -132,7 +245,7 @@ export default function Home() {
     startAuto();
   };
 
-  // ── Fetch productos destacados (FAVS) ──────────────────────────────────────
+  // ── Fetch productos ───────────────────────────────────────────────────────
   useEffect(() => {
     fetch('/api/productos?destacado=true&pageSize=4')
       .then((r) => r.json())
@@ -141,7 +254,6 @@ export default function Home() {
       .finally(() => setLoadingFavs(false));
   }, []);
 
-  // ── Fetch Night Collection ─────────────────────────────────────────────────
   useEffect(() => {
     fetch('/api/productos?categoria=cat_noche&pageSize=2')
       .then((r) => r.json())
@@ -150,7 +262,6 @@ export default function Home() {
       .finally(() => setLoadingNight(false));
   }, []);
 
-  // ── Fetch Archive Editions ─────────────────────────────────────────────────
   useEffect(() => {
     fetch('/api/productos?categoria=cat_archive&pageSize=2')
       .then((r) => r.json())
@@ -159,27 +270,19 @@ export default function Home() {
       .finally(() => setLoadingArchive(false));
   }, []);
 
-  // ── Video toggle ───────────────────────────────────────────────────────────
-  function toggleVideo(id) {
-    const v = videoRefs.current[id];
-    if (!v) return;
-    if (v.paused) { v.play(); } else { v.pause(); }
-  }
-
   const slide = HERO_SLIDES[slideActual];
 
-  // ──────────────────────────────────────────────────────────────────────────
   return (
     <main>
 
-      {/* ════════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════
           HERO — Split text | carousel
-      ════════════════════════════════════════════════════════ */}
+      ══════════════════════════════════════════════════════ */}
       <section
         className="bg-onyx-black grid grid-cols-1 md:grid-cols-2 overflow-hidden"
         style={{ minHeight: '85vh' }}
       >
-        {/* ── IZQUIERDA: Imagen carrusel ── */}
+        {/* Izquierda: imagen */}
         <div className="relative overflow-hidden" style={{ minHeight: '60vw', maxHeight: '100vh' }}>
           {HERO_SLIDES.map((s, i) => (
             <div
@@ -205,7 +308,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-onyx-black/20 pointer-events-none" />
         </div>
 
-        {/* ── DERECHA: Texto ── */}
+        {/* Derecha: texto */}
         <div className="flex flex-col justify-center px-6 py-10 md:px-16 md:py-0">
           <p className="font-label-md text-[11px] md:text-label-md uppercase tracking-[0.3em] mb-5 text-white/50">
             Archive Editions — Autumn Winter ´26
@@ -225,12 +328,12 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 mb-10">
-            <Link href="/catalogo"
-              className="bg-white text-onyx-black px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-platinum-grey transition-all duration-300 text-center">
+            <Link href="/productos"
+              className="bg-white text-onyx-black px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-platinum-grey transition-colors text-center">
               Shop Collection
             </Link>
-            <Link href="/catalogo"
-              className="border border-white/40 text-white px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-white/10 transition-all duration-300 text-center">
+            <Link href="/productos"
+              className="border border-white/40 text-white px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-white/10 transition-colors text-center">
               Lookbook
             </Link>
           </div>
@@ -239,7 +342,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => goTo(slideActual - 1)}
-              className="w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-all"
+              className="w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
               aria-label="Anterior"
               style={{ minHeight: 'unset', minWidth: 'unset' }}
             >
@@ -251,17 +354,19 @@ export default function Home() {
                   key={i}
                   onClick={() => goTo(i)}
                   style={{
-                    width: i === slideActual ? 24 : 8, height: 2,
+                    width: i === slideActual ? 24 : 8,
+                    height: 2,
                     background: i === slideActual ? '#fff' : 'rgba(255,255,255,0.3)',
                     border: 'none', cursor: 'pointer', padding: 0,
-                    minHeight: 'unset', minWidth: 'unset', transition: 'all 0.3s ease',
+                    minHeight: 'unset', minWidth: 'unset',
+                    transition: 'all 0.3s ease',
                   }}
                 />
               ))}
             </div>
             <button
               onClick={() => goTo(slideActual + 1)}
-              className="w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-all"
+              className="w-10 h-10 border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
               aria-label="Siguiente"
               style={{ minHeight: 'unset', minWidth: 'unset' }}
             >
@@ -274,9 +379,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════
           VALUE PROPS
-      ════════════════════════════════════════════════════════ */}
+      ══════════════════════════════════════════════════════ */}
       <section className="bg-surface py-12 border-y border-platinum-grey">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           {[
@@ -293,9 +398,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          FAVS — productos con destacado = true
-      ════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          SHOP THE LOOK — Videos
+      ══════════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-28 bg-surface border-y border-platinum-grey">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-16">
+
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="font-headline-lg text-headline-lg uppercase tracking-[0.2em] mb-2">
+              SHOP THE LOOK
+            </h2>
+            <p className="font-body-md text-body-md text-on-surface-variant uppercase tracking-widest">
+              Mirá nuestras prendas en movimiento
+            </p>
+            <div className="w-24 h-px bg-primary mx-auto mt-6" />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+            {LOOK_VIDEOS.map((v) => (
+              <VideoCard key={v.id} src={v.src} label={v.label} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          FAVS
+      ══════════════════════════════════════════════════════ */}
       <section className="py-20 md:py-28 max-w-[1280px] mx-auto px-5 md:px-16">
         <div className="flex justify-between items-end mb-12 md:mb-16">
           <div>
@@ -304,7 +433,7 @@ export default function Home() {
               Nuestros artículos más deseados de la temporada.
             </p>
           </div>
-          <Link href="/catalogo"
+          <Link href="/productos"
             className="font-label-md text-label-md uppercase underline tracking-widest hover:text-on-surface-variant transition-colors whitespace-nowrap ml-4">
             Ver Todo
           </Link>
@@ -318,10 +447,9 @@ export default function Home() {
           }
         </div>
       </section>
-
-      {/* ════════════════════════════════════════════════════════
-          NIGHT COLLECTION — cat_noche
-      ════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          NIGHT COLLECTION
+      ══════════════════════════════════════════════════════ */}
       <section className="bg-onyx-black text-white py-20 md:py-28">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-12 md:mb-16">
@@ -372,7 +500,7 @@ export default function Home() {
                             3 x {calcCuotas(p.precio)} sin interés
                           </p>
                         </div>
-                        <span className="border border-white/30 px-5 py-2.5 font-label-md text-label-md uppercase tracking-widest hover:bg-white hover:text-onyx-black transition-all whitespace-nowrap shrink-0 text-white text-sm">
+                        <span className="border border-white/30 px-5 py-2.5 font-label-md text-label-md uppercase tracking-widest hover:bg-white hover:text-onyx-black transition-colors whitespace-nowrap shrink-0 text-white text-sm">
                           Ver Más
                         </span>
                       </div>
@@ -387,17 +515,17 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/catalogo?categoria=cat_noche"
-              className="border border-white/30 px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-white hover:bg-white hover:text-onyx-black transition-all inline-block">
+            <Link href="/productos?categoria=cat_noche"
+              className="border border-white/30 px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-white hover:bg-white hover:text-onyx-black transition-colors inline-block">
               Ver Night Collection
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          ARCHIVE EDITIONS — cat_archive
-      ════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          ARCHIVE EDITIONS
+      ══════════════════════════════════════════════════════ */}
       <section className="bg-surface-container-low py-20 md:py-28">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-14 md:mb-20">
@@ -442,7 +570,8 @@ export default function Home() {
                       </h3>
                       <p className="font-body-md font-bold">{fmtPrecio(p.precio)}</p>
                       <p className="font-caption text-[11px] text-on-surface-variant mt-0.5">
-                        3 x {calcCuotas(p.precio)} sin interés &nbsp;·&nbsp; {fmtPrecio(p.precioTransferencia ?? p.precio * 0.8)} con Transferencia
+                        3 x {calcCuotas(p.precio)} sin interés &nbsp;·&nbsp;{' '}
+                        {fmtPrecio(p.precioTransferencia ?? p.precio * 0.8)} con Transferencia
                       </p>
                     </Link>
                   ))
@@ -455,17 +584,17 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/catalogo?categoria=cat_archive"
-              className="border border-primary px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all inline-block">
+            <Link href="/productos?categoria=cat_archive"
+              className="border border-primary px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-colors inline-block">
               Ver Archive Editions
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════
           MEDIOS DE PAGO
-      ════════════════════════════════════════════════════════ */}
+      ══════════════════════════════════════════════════════ */}
       <section className="py-20 md:py-28 bg-surface">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-12 md:mb-16">
@@ -473,6 +602,7 @@ export default function Home() {
             <div className="w-24 h-px bg-primary mx-auto" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10">
+
             {/* Transferencia */}
             <div className="flex flex-col items-center text-center p-6 md:p-8 border border-platinum-grey bg-white hover:shadow-lg transition-shadow duration-300">
               <div className="w-14 h-14 rounded-full bg-platinum-grey flex items-center justify-center mb-5">
@@ -484,6 +614,7 @@ export default function Home() {
               </p>
               <p className="font-caption text-on-surface-variant text-sm">Válido para compras en el showroom y tienda online</p>
             </div>
+
             {/* Crédito */}
             <div className="flex flex-col items-center text-center p-6 md:p-8 border border-platinum-grey bg-white hover:shadow-lg transition-shadow duration-300">
               <div className="w-14 h-14 rounded-full bg-platinum-grey flex items-center justify-center mb-5">
@@ -503,6 +634,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
             {/* Débito */}
             <div className="flex flex-col items-center text-center p-6 md:p-8 border border-platinum-grey bg-white hover:shadow-lg transition-shadow duration-300">
               <div className="w-14 h-14 rounded-full bg-platinum-grey flex items-center justify-center mb-5">
@@ -515,6 +647,7 @@ export default function Home() {
                 <p className="font-caption text-on-surface-variant mt-1 text-sm">con tu tarjeta de débito habitual</p>
               </div>
             </div>
+
           </div>
         </div>
       </section>
