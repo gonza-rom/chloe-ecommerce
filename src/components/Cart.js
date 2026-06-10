@@ -215,7 +215,7 @@ export default function Cart() {
                   return `${i + 1}. *${item.nombre}*${varInfo ? ` (${varInfo})` : ''} x${item.cantidad} — $${(item.precio * item.cantidad).toLocaleString('es-AR')}`;
                 }).join('\n');
                 const msg = `¡Hola! Quiero hacer este pedido:\n\n${items}\n\n*Total: $${total.toLocaleString('es-AR')}*\n\n¿Pueden confirmar disponibilidad?`;
-                window.open(`https://wa.me/5493834644467?text=${encodeURIComponent(msg)}`, '_blank');
+                window.open(`https://wa.me/5493834615992?text=${encodeURIComponent(msg)}`, '_blank');
               }}
               style={{
                 width: '100%', background: '#25D366', color: '#fff',

@@ -2,7 +2,7 @@
 // src/components/ConditionalWhatsApp.js
 import { usePathname } from 'next/navigation';
 
-const WHATSAPP = '5493834644467';
+const WHATSAPP = '5493834615992';
 
 export default function ConditionalWhatsApp() {
   const pathname = usePathname();
