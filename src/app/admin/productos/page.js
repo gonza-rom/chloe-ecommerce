@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Package, AlertTriangle, Pencil, Trash2, X, Star, Loader2 } from 'lucide-react';
 import MultipleImageUpload from '@/components/admin/MultipleImageUpload';
+import { COLOR_MAP } from '@/lib/colorMap';
 
 const PAGE_SIZE = 20;
 const TALLES = ['Unico','XS', 'S', 'M', 'L', 'XL', 'XXL', '36', '38', '40', '42', '44','46', '48', '50','52'];
@@ -546,7 +547,30 @@ export default function AdminProductosPage() {
                           <option value="">Sin talle</option>
                           {TALLES.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
-                        <input value={v.color} onChange={e => actualizarVariante(i, 'color', e.target.value)} placeholder="Rojo, Negro..." style={{ ...inputStyle, padding: '8px' }} />
+                        <div style={{ position: 'relative' }}>
+                          <div style={{
+                            position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)',
+                            width: 14, height: 14, borderRadius: '50%',
+                            background: COLOR_MAP[v.color?.toLowerCase()] ?? '#e5e5e5',
+                            border: '1px solid rgba(0,0,0,0.15)',
+                            pointerEvents: 'none', zIndex: 1,
+                          }} />
+                          <select
+                            value={v.color}
+                            onChange={e => actualizarVariante(i, 'color', e.target.value)}
+                            style={{ ...inputStyle, padding: '8px 8px 8px 28px' }}
+                          >
+                            <option value="">Sin color</option>
+                            {Object.keys(COLOR_MAP)
+                              .filter((k, i, arr) => arr.indexOf(k) === i) // deduplicar
+                              .map(key => (
+                                <option key={key} value={key}>
+                                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                                </option>
+                              ))
+                            }
+                          </select>
+                        </div>
                         <input type="number" value={v.stock} onChange={e => actualizarVariante(i, 'stock', e.target.value)} min="0" style={{ ...inputStyle, padding: '8px' }} />
                         {precioPorVariante && (
                           <input type="number" value={v.precio} onChange={e => actualizarVariante(i, 'precio', e.target.value)} placeholder="0" min="0" style={{ ...inputStyle, padding: '8px' }} />

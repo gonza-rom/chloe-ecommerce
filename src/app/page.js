@@ -126,12 +126,12 @@ function VideoCard({ src, label }) {
   }, []);
 
   // Cuando se monta el video en el DOM, lo reproducimos
-  useEffect(() => {
-    if (!visible || !videoRef.current) return;
-    videoRef.current.play()
-      .then(() => setPlaying(true))
-      .catch(() => {}); // el browser puede bloquear autoplay, no pasa nada
-  }, [visible]);
+  // useEffect(() => {
+  //   if (!visible || !videoRef.current) return;
+  //   videoRef.current.play()
+  //     .then(() => setPlaying(true))
+  //     .catch(() => {}); // el browser puede bloquear autoplay, no pasa nada
+  // }, [visible]);
 
   function togglePlay() {
     const v = videoRef.current;
@@ -331,10 +331,6 @@ export default function Home() {
             <Link href="/productos"
               className="bg-white text-onyx-black px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-platinum-grey transition-colors text-center">
               Shop Collection
-            </Link>
-            <Link href="/productos"
-              className="border border-white/40 text-white px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-white/10 transition-colors text-center">
-              Lookbook
             </Link>
           </div>
 

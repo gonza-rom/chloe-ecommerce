@@ -101,7 +101,7 @@ export default function Navbar() {
         <div className="flex whitespace-nowrap animate-ticker">
           {[...Array(6)].map((_, i) => (
             <span key={i} className="text-[11px] tracking-[0.2em] uppercase px-12 font-label-md">
-              CITY ICONS ⋆˙⟡ new collection &nbsp;·&nbsp; 20% OFF con transferencia &nbsp;·&nbsp; 3 &amp; 6 cuotas sin interés &nbsp;·&nbsp; Envíos a todo el país
+              CITY ICONS ⋆˙⟡ new collection &nbsp;·&nbsp; 20% OFF con transferencia &nbsp;·&nbsp; 3 cuotas sin interés &nbsp;·&nbsp; Envíos a todo el país proximamente
             </span>
           ))}
         </div>

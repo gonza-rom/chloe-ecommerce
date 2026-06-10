@@ -104,7 +104,7 @@ export default function Footer() {
               ))}
             </div>
             <p className="font-caption text-[11px] text-white/30 uppercase tracking-wider">
-              3 &amp; 6 cuotas sin interés
+              3 cuotas sin interés
             </p>
           </div>
         </div>

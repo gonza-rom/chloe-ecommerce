@@ -126,7 +126,6 @@ export default function MapaEntregaLocal({ onCoordsChange, onDireccionChange }) 
       <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-2">
         <MapPin size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
         <p className="text-xs text-blue-700">
-          <strong>Capital gratis</strong> · Valle Viejo y Valle Chico <strong>$2.000 mínimo</strong>.
           El costo exacto se coordina por WhatsApp.
         </p>
       </div>
