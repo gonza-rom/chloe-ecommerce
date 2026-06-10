@@ -515,7 +515,7 @@ export default function ProductoDetallePage() {
                     <span className="material-symbols-outlined" style={{ fontSize: 16, color: '#4c4546' }}>credit_card</span>
                   </div>
                   <div>
-                    <p style={{ ...labelStyle, fontSize: 10, color: '#4c4546' }}>Tarjeta / Mercado Pago</p>
+                    <p style={{ ...labelStyle, fontSize: 10, color: '#4c4546' }}>Tarjeta de credito</p>
                     <p style={{ fontFamily: 'var(--font-karla)', fontSize: 11, color: '#7e7576', marginTop: 1 }}>
                       3 cuotas de {fmtPrecio(precio3c)} sin interés
                     </p>
@@ -571,7 +571,7 @@ export default function ProductoDetallePage() {
                   <div>
                     <p style={{ ...labelStyle, fontSize: 10, color: '#1d4ed8' }}>3 cuotas sin interés</p>
                     <p style={{ fontFamily: 'var(--font-karla)', fontSize: 11, color: '#3b82f6', marginTop: 1 }}>
-                      con tarjeta en el local
+                      con tarjeta de credito
                     </p>
                   </div>
                 </div>
