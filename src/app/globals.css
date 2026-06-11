@@ -9,6 +9,16 @@
   --primary: #000000;
   --platinum-grey: #E5E5E5;
   --onyx-black: #0A0A0A;
+
+  /* ── Variables legacy (usadas en productos/page.js y componentes con inline styles) ── */
+  --bg:          #f9f9f9;
+  --surface:     #f9f9f9;
+  --surface-low: #f3f3f4;
+  --muted:       #4c4546;
+  --border:      #E5E5E5;
+  --accent:      #e8e2d4;
+  --font-head:   var(--font-hanken), 'Hanken Grotesk', sans-serif;
+  --font-body:   var(--font-karla), 'Karla', sans-serif;
 }
 
 /* ── Reset base ── */
