@@ -18,8 +18,31 @@ const hanken = Hanken_Grotesk({
 });
 
 export const metadata = {
-  title: 'Chloe Showroom | City Icons',
-  description: 'Showroom de moda femenina en Catamarca. Envíos a todo el país.',
+  metadataBase: new URL('https://www.chloeshowroom.com.ar'),
+  title: 'Chloe Showroom | Moda Femenina en Catamarca · City Icons',
+  description: 'Showroom de moda femenina en Catamarca. Descubrí las últimas tendencias y recibí tu pedido en todo el país. Envíos rápidos y seguros.',
+  openGraph: {
+    title: 'Chloe Showroom | Moda Femenina · City Icons',
+    description: 'Showroom de moda femenina en Catamarca. Descubrí las últimas tendencias y recibí tu pedido en todo el país. Envíos rápidos y seguros.',
+    url: 'https://www.chloeshowroom.com.ar',
+    siteName: 'Chloe Showroom',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Chloe Showroom · Moda Femenina Catamarca',
+      },
+    ],
+    locale: 'es_AR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Chloe Showroom | Moda Femenina · City Icons',
+    description: 'Showroom de moda femenina en Catamarca. Descubrí las últimas tendencias y recibí tu pedido en todo el país.',
+    images: ['/og-image.jpg'],
+  },
 };
 
 export default function RootLayout({ children }) {
