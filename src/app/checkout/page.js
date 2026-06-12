@@ -8,7 +8,7 @@ import {
   ArrowLeft, ShoppingBag, CheckCircle,
   Loader2, AlertCircle, Store,
   Truck, Banknote, Building2, Tag, X, QrCode,
-  CreditCard, ChevronDown, ChevronRight, Check,
+  CreditCard, ChevronDown, ChevronRight, Check, ShieldCheck,MessageCircle 
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { createClient } from '@/lib/supabase/client';
@@ -360,12 +360,12 @@ function ResumenLateral({ cart, subtotal, costoEnvio, total, tipoEnvio, infoEnvi
       {/* Trust badges */}
       <div style={{ borderTop: '1px solid #E5E5E5', padding: '16px 24px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, textAlign: 'center' }}>
         {[
-          { icon: '🔒', label: 'Pago Seguro' },
-          { icon: '🚚', label: 'Envío al País' },
-          { icon: '💬', label: 'Soporte WA' },
+          { icon: <ShieldCheck size={15} color="#7e7576" />, label: 'Pago Seguro' },
+          { icon: <Truck size={15} color="#7e7576" />,       label: 'Envío al País' },
+          { icon: <MessageCircle size={15} color="#7e7576" />, label: 'Soporte WA' },
         ].map(({ icon, label }) => (
           <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-            <span style={{ fontSize: 16 }}>{icon}</span>
+            {icon}
             <p style={{ fontFamily: 'var(--font-hanken)', fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7e7576' }}>{label}</p>
           </div>
         ))}
@@ -588,15 +588,22 @@ async function confirmar() {
   const metodosPago = [
     {
       id: 'mercadopago', label: 'MARCATON BNA+',
-      desc: '20% de reintegro · Hasta 3 cuotas sin interés',
+      desc: '20% de reintegro · Hasta 6 cuotas sin interés',
       badge: '20% Reintegro', badgeColor: '#1d4ed8',
       iconCustom: <QrCode size={16} color="#1d4ed8" />,
     },
     {
-      id: 'credito', label: 'Visa / Mastercard',
-      desc: '3 cuotas sin interés con todas las tarjetas',
-      badge: '3 cuotas', badgeColor: '#4c4546',
-      iconCustom: <CreditCard size={16} color="#4c4546" />,
+      id: 'credito', label: 'Tarjeta de Crédito VISA/MASTERCARD',
+      desc: 'Coordinamos el pago por WhatsApp',
+      badge: 'Por WhatsApp', badgeColor: '#2d7a3a',
+      iconCustom: <MessageCircle size={16} color="#2d7a3a" />,
+    },
+    {
+      id: 'credito2', label: 'Visa / Mastercard',
+      desc: 'Pagos online con tarjeta · Próximamente disponible',
+      badge: 'Próximamente', badgeColor: '#9e9e9e',
+      iconCustom: <CreditCard size={16} color="#9e9e9e" />,
+      disabled: true,
     },
     {
       id: 'debito', label: 'Débito · GO Cuotas',
@@ -953,28 +960,30 @@ async function confirmar() {
 
                     {/* Cards de pago */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      {metodosPago.map(({ id, label, desc, badge, badgeColor, iconCustom }) => (
-                        <MethodCard key={id} selected={metodoPago === id}>
-                          <input type="radio" name="pago" value={id} checked={metodoPago === id}
-                            onChange={() => setMetodoPago(id)}
-                            style={{ marginTop: 3, accentColor: '#0A0A0A', flexShrink: 0 }} />
-                          <div style={{ width: 32, height: 32, background: '#f3f3f4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            {iconCustom}
+                    {metodosPago.map(({ id, label, desc, badge, badgeColor, iconCustom, disabled }) => (                    
+                      <MethodCard key={id} selected={metodoPago === id}
+                        style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'pointer' }}>
+                        <input type="radio" name="pago" value={id} checked={metodoPago === id}
+                          onChange={() => !disabled && setMetodoPago(id)}
+                          disabled={disabled}
+                          style={{ marginTop: 3, accentColor: '#0A0A0A', flexShrink: 0 }} />
+                        <div style={{ width: 32, height: 32, background: '#f3f3f4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {iconCustom}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                            <p style={{ fontFamily: 'var(--font-hanken)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</p>
+                            <span style={{
+                              fontFamily: 'var(--font-hanken)', fontSize: 8, letterSpacing: '0.12em',
+                              textTransform: 'uppercase', padding: '2px 8px',
+                              border: `1px solid ${badgeColor}`, color: badgeColor,
+                            }}>
+                              {badge}
+                            </span>
                           </div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              <p style={{ fontFamily: 'var(--font-hanken)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</p>
-                              <span style={{
-                                fontFamily: 'var(--font-hanken)', fontSize: 8, letterSpacing: '0.12em',
-                                textTransform: 'uppercase', padding: '2px 8px',
-                                border: `1px solid ${badgeColor}`, color: badgeColor,
-                              }}>
-                                {badge}
-                              </span>
-                            </div>
-                            <p style={{ fontFamily: 'var(--font-karla)', fontSize: 12, color: '#7e7576', marginTop: 3 }}>{desc}</p>
-                          </div>
-                        </MethodCard>
+                          <p style={{ fontFamily: 'var(--font-karla)', fontSize: 12, color: '#7e7576', marginTop: 3 }}>{desc}</p>
+                        </div>
+                      </MethodCard>
                       ))}
                     </div>
 
@@ -987,7 +996,7 @@ async function confirmar() {
                         <div style={{ display: 'flex', gap: 12, width: '100%' }}>
                           {[
                             { valor: '20%', sub: 'de reintegro', detalle: 'en tu resumen de tarjeta' },
-                            { valor: '3', sub: 'cuotas sin interés', detalle: `${fmt(total / 3)} / cuota` },
+                            { valor: '6', sub: 'cuotas sin interés', detalle: `${fmt(total / 3)} / cuota` },
                           ].map(({ valor, sub, detalle }) => (
                             <div key={sub} style={{ flex: 1, background: 'white', border: '1px solid #bfdbfe', padding: '12px 16px', textAlign: 'center' }}>
                               <p style={{ fontFamily: 'var(--font-hanken)', fontSize: 24, fontWeight: 800, color: '#1d4ed8' }}>{valor}</p>
