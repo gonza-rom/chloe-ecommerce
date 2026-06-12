@@ -499,10 +499,12 @@ export default function CheckoutPage() {
   function irAPaso2() { if (validarPaso1()) { setTipoEnvio(''); setPaso(2); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
   function irAPaso3() { if (validarPaso2()) { setPaso(3); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
 
-  async function confirmar() {
+async function confirmar() {
+
     if (!validarPaso3()) return;
     setLoading(true);
     setError('');
+
     try {
       const payload = {
         items: cart.map(item => {
@@ -541,6 +543,31 @@ export default function CheckoutPage() {
           },
         }),
       };
+
+      // ── DÉBITO: crear pedido → redirigir a Go Cuotas ──────────────────
+      if (metodoPago === 'debito') {
+        const resPedido = await fetch('/api/checkout', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+        });
+        const dataPedido = await resPedido.json();
+        if (!dataPedido.ok) { setError(dataPedido.error ?? 'Error al crear el pedido'); return; }
+
+        const resGC = await fetch('/api/gocuotas/create', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pedidoId:       dataPedido.pedidoId,
+            total,
+            compradorEmail: form.email.trim(),
+          }),
+        });
+        const dataGC = await resGC.json();
+        if (!dataGC.ok) { setError(dataGC.error ?? 'Error al conectar con Go Cuotas'); return; }
+
+        window.open(dataGC.checkoutUrl, '_blank');
+        return;
+      }
+
+      // ── RESTO DE MÉTODOS ───────────────────────────────────────────────
       const res  = await fetch('/api/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
       });
