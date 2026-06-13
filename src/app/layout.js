@@ -28,7 +28,7 @@ export const metadata = {
     siteName: 'Chloe Showroom',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Chloe Showroom · Moda Femenina Catamarca',
@@ -41,7 +41,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Chloe Showroom | Moda Femenina · City Icons',
     description: 'Showroom de moda femenina en Catamarca. Descubrí las últimas tendencias y recibí tu pedido en todo el país.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.png'],
   },
 };
 
