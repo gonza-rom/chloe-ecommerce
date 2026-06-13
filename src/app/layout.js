@@ -43,6 +43,12 @@ export const metadata = {
     description: 'Showroom de moda femenina en Catamarca. Descubrí las últimas tendencias y recibí tu pedido en todo el país.',
     images: ['/og-image.png'],
   },
+  
+  icons: {
+  icon: '/favicon.ico',
+  shortcut: '/favicon.ico',
+  apple: '/apple-touch-icon.png',
+},
 };
 
 export default function RootLayout({ children }) {
