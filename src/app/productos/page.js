@@ -872,7 +872,7 @@ export default function ProductosPage() {
           <span style={{ fontSize: 11, fontFamily: 'var(--font-head)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--primary)' }}>Catálogo</span>
         </nav>
         <h1 style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(26px,8vw,52px)', fontWeight: 300, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 8 }}>
-          Colección 2024
+          Colección 2026
         </h1>
         <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 28 }}>
           Esenciales de temporada con siluetas atemporales y acabados de alta costura.
