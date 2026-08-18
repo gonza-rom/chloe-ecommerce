@@ -9,10 +9,10 @@ import { CheckCircle, ShoppingBag, MessageCircle, Copy, Check } from 'lucide-rea
 const WA_NUMBER = '5493834644467';
 
 const CONFIG_DEFAULT = {
-  titular: 'Hoky Indumentaria',
+  titular: 'Chloe Showroom',
   banco:   'Banco Galicia',
-  cbu:     '0070999820000012345678',
-  alias:   'HOKY.INDUMENTARIA',
+  cbu:     '0000000000000000000000',
+  alias:   'CHLOE.SHOWROOM',
 };
 
 function DatoTransferencia({ label, valor, onCopiar, copiado }) {
@@ -49,7 +49,7 @@ function ExitoContent() {
   const [configPago, setConfigPago] = useState(CONFIG_DEFAULT);
 
   useEffect(() => {
-    fetch('/api/admin/config')
+    fetch('/api/config')
       .then(r => r.json())
       .then(data => {
         if (data.ok && data.data) {
@@ -145,7 +145,7 @@ function ExitoContent() {
 
             <a
               href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(
-                `Hola! Hice una transferencia para el pedido #${pedidoId?.slice(-8).toUpperCase() ?? ''} en Hoky.\n\nTe mando el comprobante ahora.`
+                `Hola! Hice una transferencia para el pedido #${pedidoId?.slice(-8).toUpperCase() ?? ''} en Chloe Showroom.\n\nTe mando el comprobante ahora.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"

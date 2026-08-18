@@ -11,7 +11,7 @@ export default function VideoUpload({ value = '', onChange, folder = 'chloe/home
 
   async function subirACloudinary(file) {
     const cloudName    = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'hokyimage';
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'chloeimage';
 
     if (!cloudName) throw new Error('Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME en el .env');
 

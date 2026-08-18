@@ -19,16 +19,16 @@ export async function POST(request) {
     const privateKey  = process.env.PAYWAY_PRIVATE_KEY;
     const amount = Math.round(total * 100); // en centavos: $25.50 → 2550
 
-    const [firstName, ...lastNameParts] = (compradorNombre || 'Cliente Hoky').split(' ');
+    const [firstName, ...lastNameParts] = (compradorNombre || 'Cliente Chloe Showroom').split(' ');
     const lastName     = lastNameParts.join(' ') || firstName;
     const ciudad       = direccion?.ciudad       || 'San Fernando del Valle de Catamarca';
     const codigoPostal = direccion?.codigoPostal || '4700';
-    const calle        = tipoEnvio === 'retiro'  ? 'Esquiú 620' : (direccion?.calle || 'Sin dirección');
+    const calle        = tipoEnvio === 'retiro'  ? 'Alpatauca 870' : (direccion?.calle || 'Sin dirección');
 
     const shipTo = {
       city:         ciudad,
       country:      'AR',
-      email:        compradorEmail || 'cliente@hoky.com',
+      email:        compradorEmail || 'cliente@chloeshowroom.com.ar',
       first_name:   firstName,
       last_name:    lastName,
       phone_number: '3834000000',
@@ -38,8 +38,8 @@ export async function POST(request) {
       street2:      '',
     };
 
-    const csItems = (items || [{ nombre: 'Indumentaria Hoky', cantidad: 1, precio: total }]).map((item, i) => ({
-      code:         `HOKY${String(i + 1).padStart(3, '0')}`,
+    const csItems = (items || [{ nombre: 'Chloe Showroom', cantidad: 1, precio: total }]).map((item, i) => ({
+      code:         `CHLOE${String(i + 1).padStart(3, '0')}`,
       name:         (item.nombre || 'Indumentaria').slice(0, 255),
       description:  (item.nombre || 'Indumentaria').slice(0, 255),
       sku:          `SKU${String(i + 1).padStart(3, '0')}`,
@@ -57,7 +57,7 @@ export async function POST(request) {
       amount,
       currency:           'ARS',
       installments:       installments || 1,
-      description:        `Pedido Hoky #${pedidoId}`,
+      description:        `Pedido Chloe Showroom #${pedidoId}`,
       payment_type:       'single',
       sub_payments:       [],
       fraud_detection: {
@@ -68,7 +68,7 @@ export async function POST(request) {
           city:         ciudad,
           country:      'AR',
           customer_id:  compradorEmail || 'guest',
-          email:        compradorEmail || 'cliente@hoky.com',
+          email:        compradorEmail || 'cliente@chloeshowroom.com.ar',
           first_name:   firstName,
           last_name:    lastName,
           phone_number: '3834000000',

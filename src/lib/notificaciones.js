@@ -45,7 +45,7 @@ export async function notificarPedidoNuevo(pedido, items = []) {
     const entregaLabel = pedido.tipoEnvio === 'retiro' ? '🏪 Retiro en local' : '🚚 Envío a domicilio';
 
     const mensaje = [
-      '🛍️ *NUEVO PEDIDO — HOKY*',
+      '🛍️ *NUEVO PEDIDO — CHLOE SHOWROOM*',
       '',
       `📋 Pedido: #${pedido.id.slice(-8).toUpperCase()}`,
       `👤 ${pedido.compradorNombre}`,

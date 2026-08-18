@@ -49,7 +49,7 @@ export default function ProductCard({ producto, onAddToCart }) {
   return (
     <div className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group border border-gray-100 hover:border-gray-300 rounded-sm product-card">
       <Link href={`/productos/${producto.id}`} className="block">
-        <div className="relative bg-hoky-sand3 aspect-[3/4]">
+        <div className="relative bg-surface-container-low aspect-[3/4]">
           {imagenPrincipal ? (
             <Image
               src={imagenPrincipal}
@@ -66,14 +66,14 @@ export default function ProductCard({ producto, onAddToCart }) {
 
           {/* Badge múltiples fotos */}
           {images.length > 1 && (
-            <div className="absolute top-2 left-2 bg-hoky-black/80 text-white text-[10px] px-2 py-0.5 tracking-wider uppercase">
+            <div className="absolute top-2 left-2 bg-onyx-black/80 text-white text-[10px] px-2 py-0.5 tracking-wider uppercase">
               {images.length} fotos
             </div>
           )}
 
           {/* Pocas unidades */}
           {producto.stock <= producto.stockMinimo && producto.stock > 0 && (
-            <div className="absolute top-2 right-2 bg-white text-hoky-black text-[10px] px-2 py-0.5 font-semibold tracking-wider uppercase border border-hoky-black">
+            <div className="absolute top-2 right-2 bg-white text-onyx-black text-[10px] px-2 py-0.5 font-semibold tracking-wider uppercase border border-onyx-black">
               Últimas
             </div>
           )}
@@ -81,7 +81,7 @@ export default function ProductCard({ producto, onAddToCart }) {
           {/* Sin stock */}
           {producto.stock === 0 && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="bg-white text-hoky-black px-4 py-1.5 text-xs font-semibold tracking-widest uppercase">
+              <span className="bg-white text-onyx-black px-4 py-1.5 text-xs font-semibold tracking-widest uppercase">
                 Sin Stock
               </span>
             </div>
@@ -105,7 +105,7 @@ export default function ProductCard({ producto, onAddToCart }) {
                 ))}
               </div>
             )}
-            <span className="bg-white text-hoky-black px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase flex items-center gap-2">
+            <span className="bg-white text-onyx-black px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase flex items-center gap-2">
               <Eye className="w-3.5 h-3.5" />
               Ver producto
             </span>
@@ -121,7 +121,7 @@ export default function ProductCard({ producto, onAddToCart }) {
         )}
 
         <Link href={`/productos/${producto.id}`}>
-          <h3 className="text-sm font-bold text-hoky-black mb-2 line-clamp-2 leading-snug hover:opacity-60 transition-opacity tracking-wide uppercase">
+          <h3 className="text-sm font-bold text-onyx-black mb-2 line-clamp-2 leading-snug hover:opacity-60 transition-opacity tracking-wide uppercase">
             {producto.nombre}
           </h3>
         </Link>
@@ -142,7 +142,7 @@ export default function ProductCard({ producto, onAddToCart }) {
 
         <div className="mt-auto flex flex-col gap-0.5">
           {/* Precio tarjeta (precio base) */}
-          <p className="text-lg font-bold text-hoky-black leading-tight">
+          <p className="text-lg font-bold text-onyx-black leading-tight">
             {formatPrecio(producto.precio)}
           </p>
 

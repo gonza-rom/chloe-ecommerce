@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
 
     if (!producto) {
       return {
-        title:       'Producto no encontrado — Hoky Indumentaria',
+        title:       'Producto no encontrado — Chloe Showroom',
         description: 'Este producto no está disponible.',
       };
     }
@@ -30,9 +30,9 @@ export async function generateMetadata({ params }) {
     const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
     const imagen   = imagenes[0] ?? producto.imagen ?? null;
 
-    const titulo      = `${producto.nombre} — Hoky Indumentaria`;
+    const titulo      = `${producto.nombre} — Chloe Showroom`;
     const descripcion = producto.descripcion
-      ?? `${producto.nombre} | $${producto.precio.toLocaleString('es-AR')} | Hoky Indumentaria — Ropa urbana y streetwear`;
+      ?? `${producto.nombre} | $${producto.precio.toLocaleString('es-AR')} | Chloe Showroom — Moda femenina en Catamarca`;
     const precioFormateado = producto.precio.toLocaleString('es-AR');
 
     return {
@@ -41,10 +41,9 @@ export async function generateMetadata({ params }) {
       keywords:    [
         producto.nombre,
         producto.categoria?.nombre,
-        'hoky',
+        'chloe showroom',
+        'moda femenina',
         'indumentaria',
-        'ropa urbana',
-        'streetwear',
         'catamarca',
       ].filter(Boolean).join(', '),
       openGraph: {
@@ -52,7 +51,7 @@ export async function generateMetadata({ params }) {
         description: descripcion,
         type:        'website',
         locale:      'es_AR',
-        siteName:    'Hoky Indumentaria',
+        siteName:    'Chloe Showroom',
         ...(imagen && {
           images: [{
             url:    imagen,
@@ -76,8 +75,8 @@ export async function generateMetadata({ params }) {
     };
   } catch {
     return {
-      title:       'Hoky Indumentaria',
-      description: 'Ropa urbana y streetwear. Envíos a todo el país.',
+      title:       'Chloe Showroom',
+      description: 'Moda femenina en Catamarca. Envíos a todo el país.',
     };
   }
 }

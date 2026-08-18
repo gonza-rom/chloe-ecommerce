@@ -44,10 +44,14 @@ export default function Footer() {
               Colecciones
             </h5>
             <ul className="flex flex-col gap-2">
-              {['City Icons', 'Archive Editions', 'Night Collection'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="font-body-md text-[14px] text-white/60 hover:text-white transition-colors">
-                    {item}
+              {[
+                { label: 'City Icons',        href: '/productos?categoria=cat_vestidos' },
+                { label: 'Archive Editions',   href: '/productos?categoria=cat_archive'  },
+                { label: 'Night Collection',   href: '/productos?categoria=cat_noche'    },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="font-body-md text-[14px] text-white/60 hover:text-white transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -60,8 +64,8 @@ export default function Footer() {
             <ul className="flex flex-col gap-2">
               {[
                 { label: 'Contacto',  href: '/contacto' },
-                { label: 'Cambios',   href: '#' },
-                { label: 'Políticas', href: '#' },
+                { label: 'Cambios',   href: '/envios' },
+                { label: 'Políticas', href: '/privacidad' },
                 { label: 'Nosotros',  href: '/nosotros' },
               ].map((item) => (
                 <li key={item.label}>
@@ -117,9 +121,11 @@ export default function Footer() {
             © {new Date().getFullYear()} CHLOE SHOWROOM. ALL RIGHTS RESERVED.
           </p>
           <div className="flex items-center gap-4 font-caption text-[11px] text-white/30 uppercase tracking-wider">
-            <Link href="#" className="hover:text-white/60 transition-colors">Envíos y cambios</Link>
+            <Link href="/envios" className="hover:text-white/60 transition-colors">Envíos y cambios</Link>
             <span>·</span>
-            <Link href="#" className="hover:text-white/60 transition-colors">Políticas</Link>
+            <Link href="/terminos" className="hover:text-white/60 transition-colors">Términos</Link>
+            <span>·</span>
+            <Link href="/privacidad" className="hover:text-white/60 transition-colors">Privacidad</Link>
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto px-5 md:px-16 pb-5 flex justify-center md:justify-end">

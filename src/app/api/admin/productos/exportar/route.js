@@ -46,7 +46,7 @@ export async function GET() {
     return new NextResponse(csv, {
       headers: {
         "Content-Type":        "text/csv; charset=utf-8",
-        "Content-Disposition": `attachment; filename="productos_hoky_${fecha}.csv"`,
+        "Content-Disposition": `attachment; filename="productos_chloe_${fecha}.csv"`,
       },
     });
   } catch (error) {

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import {
   ArrowLeft, ShoppingBag, CheckCircle,
   Loader2, AlertCircle, Store,
-  Truck, Banknote, Building2, Tag, X, QrCode,
+  Truck, Banknote, Building2, Tag, QrCode,
   CreditCard, ChevronDown, ChevronRight, Check, ShieldCheck,MessageCircle 
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -223,9 +223,6 @@ function InfoBox({ icon: Icon, label, value, onCambiar }) {
 
 // ── Resumen lateral ────────────────────────────────────────────────────────
 function ResumenLateral({ cart, subtotal, costoEnvio, total, tipoEnvio, infoEnvio, metodoPago, ahorroTotal, tieneDescuento }) {
-  const [cuponInput,   setCuponInput]   = useState('');
-  const [mostrarCupon, setMostrarCupon] = useState(false);
-
   return (
     <div style={{ border: '1.5px solid #E5E5E5', background: 'white' }}>
 
@@ -267,47 +264,6 @@ function ResumenLateral({ cart, subtotal, costoEnvio, total, tipoEnvio, infoEnvi
             </div>
           );
         })}
-      </div>
-
-      <div style={{ borderTop: '1px solid #E5E5E5' }} />
-
-      {/* Cupón */}
-      <div style={{ padding: '14px 24px' }}>
-        {!mostrarCupon ? (
-          <button onClick={() => setMostrarCupon(true)} style={{
-            display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer',
-            fontFamily: 'var(--font-hanken)', fontSize: 9, letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: '#7e7576',
-          }}>
-            <Tag size={12} />
-            Agregar cupón de descuento
-          </button>
-        ) : (
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input
-              value={cuponInput}
-              onChange={e => setCuponInput(e.target.value)}
-              placeholder="CÓDIGO DE CUPÓN"
-              autoFocus
-              style={{
-                flex: 1, border: 0, borderBottom: '1.5px solid #E5E5E5',
-                padding: '6px 0', background: 'transparent',
-                fontFamily: 'var(--font-hanken)', fontSize: 10, letterSpacing: '0.1em',
-                outline: 'none', color: '#1a1c1c',
-              }}
-            />
-            <button style={{
-              padding: '6px 14px', background: '#0A0A0A', color: 'white', border: 'none',
-              fontFamily: 'var(--font-hanken)', fontSize: 9, letterSpacing: '0.12em',
-              textTransform: 'uppercase', cursor: 'pointer',
-            }}>
-              Aplicar
-            </button>
-            <button onClick={() => setMostrarCupon(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7e7576' }}>
-              <X size={14} />
-            </button>
-          </div>
-        )}
       </div>
 
       <div style={{ borderTop: '1px solid #E5E5E5' }} />
@@ -408,7 +364,7 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    fetch('/api/admin/config')
+    fetch('/api/config')
       .then(r => r.json())
       .then(data => {
         if (data.ok && data.data) {

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Página no encontrada — Hoky Indumentaria',
+  title: 'Página no encontrada — Chloe Showroom',
 };
 
 export default function NotFound() {

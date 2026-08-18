@@ -1,7 +1,7 @@
 // src/app/admin/layout.js
 import AdminSidebar from './sidebar';
 
-export const metadata = { title: 'Admin — Hoky' };
+export const metadata = { title: 'Admin — Chloe Showroom' };
 
 export default function AdminLayout({ children }) {
   return (

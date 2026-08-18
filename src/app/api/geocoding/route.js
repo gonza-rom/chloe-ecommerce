@@ -14,7 +14,7 @@ export async function GET(request) {
       try {
         const res = await fetch(
           `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=5&lang=es`,
-          { headers: { 'User-Agent': 'HokyEcommerce/1.0' }, cache: 'no-store' }
+          { headers: { 'User-Agent': 'ChloeShowroomEcommerce/1.0' }, cache: 'no-store' }
         );
         if (res.ok) {
           const geojson = await res.json();
@@ -48,9 +48,9 @@ export async function GET(request) {
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=1`,
         {
           headers: {
-            'User-Agent':      'HokyEcommerce/1.0 (hokyindumentaria@gmail.com)',
+            'User-Agent':      'ChloeShowroomEcommerce/1.0 (chloeshowroom01@gmail.com)',
             'Accept-Language': 'es',
-            'Referer':         'https://hoky-ecommerce.vercel.app',
+            'Referer':         'https://www.chloeshowroom.com.ar',
           },
           cache: 'no-store',
         }
@@ -68,9 +68,9 @@ export async function GET(request) {
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`,
         {
           headers: {
-            'User-Agent':      'HokyEcommerce/1.0 (hokyindumentaria@gmail.com)',
+            'User-Agent':      'ChloeShowroomEcommerce/1.0 (chloeshowroom01@gmail.com)',
             'Accept-Language': 'es',
-            'Referer':         'https://hoky-ecommerce.vercel.app',
+            'Referer':         'https://www.chloeshowroom.com.ar',
           },
           cache: 'no-store',
         }

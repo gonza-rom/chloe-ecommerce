@@ -7,8 +7,8 @@ import { prisma } from '@/lib/prisma';
 import { ZONAS_ENVIO, ENVIO_GRATIS_DESDE } from '@/lib/envio';
 
 export const metadata = {
-  title:       'Envíos y cambios — Hoky Indumentaria',
-  description: 'Información sobre envíos, tiempos de entrega, cambios y devoluciones en Hoky Indumentaria.',
+  title:       'Envíos y cambios — Chloe Showroom',
+  description: 'Información sobre envíos, tiempos de entrega, cambios y devoluciones en Chloe Showroom.',
 };
 
 export const revalidate = 3600; // revalidar cada hora

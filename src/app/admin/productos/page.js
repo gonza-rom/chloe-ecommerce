@@ -390,7 +390,7 @@ export default function AdminProductosPage() {
               <MultipleImageUpload
                 value={form.imagenes}
                 onChange={(imagenes) => setForm(p => ({ ...p, imagenes, imagen: imagenes[0] ?? '' }))}
-                folder="hoky/productos"
+                folder="chloe/productos"
               />
 
               <hr style={{ border: 'none', borderTop: '1px solid #f0ede8' }} />

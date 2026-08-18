@@ -10,17 +10,17 @@ const MAPS = 'https://www.google.com/maps/place/CHLOE+SHOWROOM/@-28.4506353,-65.
 const COLECCIONES = [
   {
     nombre: 'City Icons',
-    href: '/catalogo?categoria=cat_vestidos',
+    href: '/productos?categoria=cat_vestidos',
     src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCSHQOz5rQcqVMrPcxeg6ii1afPxh3ShCcXMCf65nqg9CpirkkKF_SRjn9a-puDq5co-kfjeOpRYBclk01nU1vu4AuiXwjl5lYTvV_yKTiNz3uVRq5DxAbIEn_xgpUc6vKc260KtQQ73IYGTFBZEFpWEi4gskTOPPUSJ7CAecOp4RDFeOHeKh3AWu9TeTfWwbhHV3LcicS6UMlOb6ct7OEZ_zRVII0OryxebmtUZCw7JElNNLN4EzCX6IbPdKsocvtr7Njpg1MrueE',
   },
   {
     nombre: 'Night Collection',
-    href: '/catalogo?categoria=cat_noche',
+    href: '/productos?categoria=cat_noche',
     src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAIA8-1QauW8tnOaYLZ7vzBUhH0J0uUb1pud1prIqhaYFaEWlCnz7DuWQsav4fnnZNSul3CaiwqmWhlessaMc8MMDIh-FAYCtdL9sf5SP6YW5CFDakIxGQ2f4I1u1L8qapGLKNM5LpUN1Q2xES2zrocPPUutON6vC2XdOnc_bOruMwdhKzDWeLs2_N3w-lTKbe_kr8VkfNeqWCbTcs_98FPauDVN1hkOC7eSG9zzAQ2FkOB-MZunJtktixXG8wuzv8PUd11Qfo92ag',
   },
   {
     nombre: 'Archive Editions',
-    href: '/catalogo?categoria=cat_archive',
+    href: '/productos?categoria=cat_archive',
     src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCQWU4k7BfvCIIdDrTJaMMi6mF41LEzfw1I7uqY9rzk8Uyy55Q-_gvqo4M85v3dARUKiZYaAcO2l5EQJThIeFcpJ_DQlkJdW19vYoNfZsqKjx4ums7kZidm9-lruVSyHX-mLiFT6C1oPNCQoO7s6WlXfHHfs-HHWIGVaQELjsA7hr2rH7XkKMDOEya8hldp8jzCvZlz4ggXzyQArru5tA98B9cK9UxAdZWK7zW2M9FWHsQfyXA4fvEj6XN_sKOCk1pu_R7sIcU82DE',
   },
 ];
@@ -139,7 +139,7 @@ export default function NosotrosPage() {
           <Reveal delay={200}>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/catalogo"
+                href="/productos"
                 className="bg-white text-onyx-black px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-platinum-grey transition-all duration-300 text-center"
               >
                 Ver Colección
@@ -207,7 +207,7 @@ export default function NosotrosPage() {
             ))}
             <div className="pt-4">
               <Link
-                href="/catalogo"
+                href="/productos"
                 className="group relative inline-flex items-center justify-between min-w-[220px] px-8 py-4 bg-primary text-on-primary font-label-md uppercase tracking-widest overflow-hidden"
               >
                 <span className="relative z-10">Ver Colección</span>
@@ -282,7 +282,7 @@ export default function NosotrosPage() {
             <h2 className="font-headline-lg text-headline-lg uppercase">⋆˙⟡ Nuestras Colecciones</h2>
           </div>
           <Link
-            href="/catalogo"
+            href="/productos"
             className="font-label-md text-[11px] uppercase tracking-widest underline underline-offset-4 hover:opacity-60 transition-opacity self-start md:self-auto"
           >
             Ver todo el catálogo

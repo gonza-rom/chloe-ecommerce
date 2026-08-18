@@ -52,13 +52,31 @@ export default function ContactoPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setFormState('sending');
-    // Simulación — reemplazá con tu lógica real (email, webhook, etc.)
-    await new Promise((r) => setTimeout(r, 1500));
-    setFormState('sent');
-    setTimeout(() => {
-      setFormState('idle');
-      e.target.reset();
-    }, 3000);
+
+    const form = e.target;
+    const datos = {
+      nombre:  form.nombre.value,
+      email:   form.email.value,
+      asunto:  form.asunto.value,
+      mensaje: form.mensaje.value,
+    };
+
+    try {
+      const res  = await fetch('/api/contacto', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos),
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error ?? 'Error al enviar');
+
+      setFormState('sent');
+      setTimeout(() => {
+        setFormState('idle');
+        form.reset();
+      }, 3000);
+    } catch {
+      setFormState('error');
+      setTimeout(() => setFormState('idle'), 4000);
+    }
   }
 
   const inputBase =
@@ -310,10 +328,13 @@ export default function ContactoPage() {
                   style={{ minHeight: 'unset' }}
                 >
                   <span className="relative z-10">
-                    {formState === 'sending' ? 'Enviando...' : formState === 'sent' ? '¡Mensaje enviado!' : 'Enviar Consulta'}
+                    {formState === 'sending' ? 'Enviando...'
+                      : formState === 'sent'  ? '¡Mensaje enviado!'
+                      : formState === 'error' ? 'Error — reintentar'
+                      : 'Enviar Consulta'}
                   </span>
                   <span className="material-symbols-outlined relative z-10 transition-transform group-hover:translate-x-2">
-                    {formState === 'sent' ? 'check' : 'arrow_right_alt'}
+                    {formState === 'sent' ? 'check' : formState === 'error' ? 'error_outline' : 'arrow_right_alt'}
                   </span>
                   {/* Hover fill */}
                   <div className="absolute inset-0 bg-onyx-black transform translate-y-full transition-transform duration-300 group-hover:translate-y-0 pointer-events-none" />

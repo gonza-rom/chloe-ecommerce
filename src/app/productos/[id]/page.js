@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { COLOR_MAP } from '@/lib/colorMap';
+import { createClient } from '@/lib/supabase/client';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -283,8 +284,50 @@ export default function ProductoDetallePage() {
   const [colorSeleccionado,     setColorSeleccionado]     = useState('');
   const [errorVariante,         setErrorVariante]         = useState('');
   const [wishlist,              setWishlist]              = useState(false);
+  const [guardandoFav,          setGuardandoFav]          = useState(false);
 
   const { addToCart } = useCart();
+
+  // ── Favoritos (sincronizados con la cuenta) ───────────────────────────────
+  useEffect(() => {
+    if (!producto?.id) return;
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      fetch('/api/cuenta/favoritos')
+        .then(r => r.json())
+        .then(data => {
+          if (data.ok) setWishlist(data.data.some(p => p.id === producto.id));
+        })
+        .catch(() => {});
+    });
+  }, [producto?.id]);
+
+  async function toggleWishlist() {
+    if (!producto?.id || guardandoFav) return;
+    const supabase           = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { router.push(`/auth/login?redirect=/productos/${producto.id}`); return; }
+
+    setGuardandoFav(true);
+    const yaGuardado = wishlist;
+    setWishlist(!yaGuardado); // optimista
+
+    try {
+      const res = yaGuardado
+        ? await fetch(`/api/cuenta/favoritos?productoId=${producto.id}`, { method: 'DELETE' })
+        : await fetch('/api/cuenta/favoritos', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ productoId: producto.id }),
+          });
+      if (!res.ok) setWishlist(yaGuardado); // revertir si falló
+    } catch {
+      setWishlist(yaGuardado); // revertir
+    } finally {
+      setGuardandoFav(false);
+    }
+  }
 
   const fetchRelacionados = useCallback(async (categoriaId, productoId) => {
     try {
@@ -770,7 +813,8 @@ export default function ProductoDetallePage() {
 
               {/* Favoritos */}
               <button
-                onClick={() => setWishlist((w) => !w)}
+                onClick={toggleWishlist}
+                disabled={guardandoFav}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                   padding: '14px 24px', background: 'none', cursor: 'pointer',

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { prisma }       from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
 import { notificarPedidoNuevo } from '@/lib/notificaciones';
+import { enviarEmailPedidoNuevo, enviarEmailConfirmacionCliente } from '@/lib/email';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
@@ -144,6 +145,12 @@ export async function POST(req) {
 
     notificarPedidoNuevo(pedido, items).catch(err =>
       console.error('[WA Notif] Error background:', err)
+    );
+    enviarEmailPedidoNuevo(pedido, items).catch(err =>
+      console.error('[Email Pedido] Error background:', err)
+    );
+    enviarEmailConfirmacionCliente(pedido, items).catch(err =>
+      console.error('[Email Cliente] Error background:', err)
     );
 
     return NextResponse.json({ ok: true, pedidoId: pedido.id });

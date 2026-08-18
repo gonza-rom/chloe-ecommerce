@@ -8,7 +8,7 @@ export default function MultipleImageUpload({
   value = [],
   onChange,
   maxImagenes = 10,
-  folder = 'hoky/productos',
+  folder = 'chloe/productos',
 }) {
   const [subiendo, setSubiendo]   = useState(false);
   const [progreso, setProgreso]   = useState(0);
@@ -18,7 +18,7 @@ export default function MultipleImageUpload({
 
   async function subirACloudinary(file) {
     const cloudName    = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'hokyimage';
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'chloeimage';
 
     if (!cloudName) throw new Error('Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME en el .env');
 

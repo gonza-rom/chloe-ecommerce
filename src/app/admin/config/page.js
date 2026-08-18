@@ -120,7 +120,7 @@ export default function AdminConfigPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Campo label="Titular de la cuenta">
               <input value={form.transferenciaTitular} onChange={set('transferenciaTitular')}
-                placeholder="Hoky Indumentaria" className={inp} />
+                placeholder="Chloe Showroom" className={inp} />
             </Campo>
             <Campo label="Banco">
               <input value={form.transferenciaBanco} onChange={set('transferenciaBanco')}
@@ -134,7 +134,7 @@ export default function AdminConfigPage() {
             </Campo>
             <Campo label="Alias">
               <input value={form.transferenciaAlias} onChange={set('transferenciaAlias')}
-                placeholder="HOKY.INDUMENTARIA" className={`${inp} font-mono uppercase`} />
+                placeholder="CHLOE.SHOWROOM" className={`${inp} font-mono uppercase`} />
             </Campo>
           </div>
         </Seccion>
@@ -168,11 +168,11 @@ export default function AdminConfigPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Campo label="Dirección del local">
               <input value={form.direccionLocal} onChange={set('direccionLocal')}
-                placeholder="Esquiú 620, Catamarca" className={inp} />
+                placeholder="Alpatauca 870, Catamarca" className={inp} />
             </Campo>
             <Campo label="Horario">
               <input value={form.horarioLocal} onChange={set('horarioLocal')}
-                placeholder="Lun–Sáb: 9:00–13:30 / 18:00–22:00" className={inp} />
+                placeholder="Lun-Vie 18-22h · Sáb 10-13h & 18-22h" className={inp} />
             </Campo>
           </div>
         </Seccion>
@@ -186,12 +186,12 @@ export default function AdminConfigPage() {
             </Campo>
             <Campo label="Email">
               <input type="email" value={form.email} onChange={set('email')}
-                placeholder="hoky@mail.com" className={inp} />
+                placeholder="chloeshowroom01@gmail.com" className={inp} />
             </Campo>
           </div>
           <Campo label="Instagram (URL completa)">
             <input value={form.instagram} onChange={set('instagram')}
-              placeholder="https://www.instagram.com/hoky.indumentaria" className={inp} />
+              placeholder="https://www.instagram.com/_chloe.showroom" className={inp} />
           </Campo>
         </Seccion>
 

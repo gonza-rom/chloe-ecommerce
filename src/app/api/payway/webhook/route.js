@@ -53,5 +53,5 @@ export async function POST(request) {
 
 // Payway a veces hace GET para verificar que el endpoint existe
 export async function GET() {
-  return NextResponse.json({ ok: true, service: 'Hoky Payway Webhook' });
+  return NextResponse.json({ ok: true, service: 'Chloe Showroom Payway Webhook' });
 }

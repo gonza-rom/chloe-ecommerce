@@ -60,6 +60,7 @@ model Producto {
   categoria   Categoria?        @relation(fields: [categoriaId], references: [id])
   variantes   ProductoVariante[]
   pedidoItems PedidoItem[]
+  favoritoDe  Cliente[]         @relation("Favoritos")
 
   @@index([activo])
   @@index([categoriaId])
@@ -99,6 +100,7 @@ model Cliente {
 
   direcciones Direccion[]
   pedidos     Pedido[]
+  favoritos   Producto[]  @relation("Favoritos")
 
   @@index([email])
   @@index([supabaseId])

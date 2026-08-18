@@ -12,7 +12,7 @@ export default function ImageUpload({ value = '', onChange, folder = 'chloe/cont
 
   async function subirACloudinary(file) {
     const cloudName    = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'hokyimage';
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? 'chloeimage';
 
     if (!cloudName) throw new Error('Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME en el .env');
 

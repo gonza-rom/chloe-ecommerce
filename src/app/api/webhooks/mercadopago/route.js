@@ -152,7 +152,7 @@ export async function POST(req) {
 
 // MP también hace GET para verificar que el endpoint existe
 export async function GET() {
-  return NextResponse.json({ ok: true, service: 'hoky-mp-webhook' });
+  return NextResponse.json({ ok: true, service: 'chloe-mp-webhook' });
 }
 
 export const dynamic = 'force-dynamic';

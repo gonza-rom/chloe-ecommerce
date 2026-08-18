@@ -294,7 +294,7 @@ export default function AdminPedidosPage() {
                   {pedidoDetalle.notas && <InfoRow label="Notas" value={pedidoDetalle.notas} />}
                 </div>
                 {pedidoDetalle.compradorTelefono && (
-                  <a href={`https://wa.me/${pedidoDetalle.compradorTelefono.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola ${pedidoDetalle.compradorNombre ?? ''}! Te contactamos por tu pedido #${pedidoDetalle.id.slice(-8).toUpperCase()} en Hoky.`)}`}
+                  <a href={`https://wa.me/${pedidoDetalle.compradorTelefono.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola ${pedidoDetalle.compradorNombre ?? ''}! Te contactamos por tu pedido #${pedidoDetalle.id.slice(-8).toUpperCase()} en Chloe Showroom.`)}`}
                     target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 mt-2 text-xs text-[#25D366] font-semibold no-underline">
                     Contactar por WhatsApp →

@@ -14,13 +14,13 @@ export async function POST(request) {
     const ambiente   = process.env.PAYWAY_ENVIRONMENT || 'sandbox';
     const publicKey  = process.env.PAYWAY_PUBLIC_KEY;
     const privateKey = process.env.PAYWAY_PRIVATE_KEY;
-    const baseUrl    = process.env.NEXT_PUBLIC_BASE_URL || 'https://hoky-ecommerce.vercel.app';
+    const baseUrl    = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.chloeshowroom.com.ar';
 
     const endpoint = ambiente === 'production'
       ? 'https://ventasonline.payway.com.ar/api/v1/checkout-payment-button/link'
       : 'https://developers.decidir.com/api/v1/checkout-payment-button/link';
 
-    const descripcion = items?.map(i => `${i.nombre} x${i.cantidad}`).join(', ') || 'Compra Hoky';
+    const descripcion = items?.map(i => `${i.nombre} x${i.cantidad}`).join(', ') || 'Compra Chloe Showroom';
 
     const payload = {
       origin_platform:     'SDK-Node',

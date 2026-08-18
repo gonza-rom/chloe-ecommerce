@@ -125,7 +125,7 @@ function ResetPasswordContent() {
 
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <p style={{ fontSize: 22, fontWeight: 900, letterSpacing: '0.15em', color: '#111', margin: 0, textTransform: 'uppercase' }}>HOKY</p>
+            <p style={{ fontSize: 22, fontWeight: 900, letterSpacing: '0.15em', color: '#111', margin: 0, textTransform: 'uppercase' }}>CHLOE</p>
             <p style={{ fontSize: 10, color: '#aaa', letterSpacing: '0.2em', margin: '2px 0 0', textTransform: 'uppercase' }}>Indumentaria</p>
           </Link>
         </div>

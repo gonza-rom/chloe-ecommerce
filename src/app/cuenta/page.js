@@ -53,12 +53,9 @@ export default function CuentaPage() {
       setDirecciones(data.data ?? []);
     } catch {}
     try {
-      const favs = JSON.parse(localStorage.getItem('hoky-favoritos') ?? '[]');
-      if (favs.length > 0) {
-        const res  = await fetch(`/api/productos?ids=${favs.join(',')}`);
-        const data = await res.json();
-        setFavoritos(data.productos ?? []);
-      }
+      const res  = await fetch('/api/cuenta/favoritos');
+      const data = await res.json();
+      setFavoritos(data.ok ? data.data ?? [] : []);
     } catch {}
   }
 

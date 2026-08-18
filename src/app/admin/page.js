@@ -230,7 +230,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 mb-0.5">Dashboard</h1>
-        <p className="text-sm text-gray-400">Panel de Hoky Indumentaria</p>
+        <p className="text-sm text-gray-400">Panel de Chloe Showroom</p>
       </div>
 
       {/* ── KPIs ── */}
