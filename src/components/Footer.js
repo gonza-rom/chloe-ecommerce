@@ -122,7 +122,17 @@ export default function Footer() {
             <Link href="#" className="hover:text-white/60 transition-colors">Políticas</Link>
           </div>
         </div>
-      </div>  
+        <div className="max-w-[1280px] mx-auto px-5 md:px-16 pb-5 flex justify-center md:justify-end">
+          <a
+            href="https://www.devhub.com.ar/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-caption text-[11px] text-white/30 uppercase tracking-wider hover:text-white/60 transition-colors"
+          >
+            Desarrollado por DevHub
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

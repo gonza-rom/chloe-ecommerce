@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Package, Tag, ShoppingBag, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, Tag, ShoppingBag, Settings, LogOut, Menu, X, FileText } from 'lucide-react';
 import Image from 'next/image';
 
 const NAV = [
@@ -12,6 +12,7 @@ const NAV = [
   { href: '/admin/productos',  icon: Package,         label: 'Productos'     },
   { href: '/admin/categorias', icon: Tag,             label: 'Categorías'    },
   { href: '/admin/pedidos',    icon: ShoppingBag,     label: 'Pedidos'       },
+  { href: '/admin/contenido',  icon: FileText,        label: 'Contenido'     },
   { href: '/admin/config',     icon: Settings,        label: 'Configuración' },
 ];
 

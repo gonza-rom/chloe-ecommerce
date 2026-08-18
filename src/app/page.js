@@ -3,38 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-// ── Constantes ────────────────────────────────────────────────────────────────
-
-const HERO_SLIDES = [
-  {
-    label: 'Ciudad + Noche',
-    nombre: 'Vestido Midi Ring',
-    src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCSHQOz5rQcqVMrPcxeg6ii1afPxh3ShCcXMCf65nqg9CpirkkKF_SRjn9a-puDq5co-kfjeOpRYBclk01nU1vu4AuiXwjl5lYTvV_yKTiNz3uVRq5DxAbIEn_xgpUc6vKc260KtQQ73IYGTFBZEFpWEi4gskTOPPUSJ7CAecOp4RDFeOHeKh3AWu9TeTfWwbhHV3LcicS6UMlOb6ct7OEZ_zRVII0OryxebmtUZCw7JElNNLN4EzCX6IbPdKsocvtr7Njpg1MrueE',
-  },
-  {
-    label: 'Favorito de Temporada',
-    nombre: 'Cardigan Ruffled Chocolate',
-    src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAvODIMhnLTK8WyS9NHgRRr3AAdzMAROuCq8GOt1IS90MZUtRb66_NCsLVE-9pTnKb-yb9zq6yObQ7kOlFRlEozxY5Epy7ilMhkNdwcXTQYlSCxPEw3QuHlkv0O7JAdF-5n8xQZk9vw3mhmWobc0MW2rBsPwr7_utQgaY3ZpU7tzFyHZ39D2_IePASGdNSdwxFsfykP8xlTB3CoxZiNhr7y737Qsu3oUMZ1c0f3EEySt4ZPtFsdaqY88p5Tit_lEbpoAx0JlNpbqHc',
-  },
-  {
-    label: 'Color del Momento',
-    nombre: 'Vestido Tiedye Dusk',
-    src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA-0QALhph06IyvtmPjACcKg65PrnHmLdu8y9ZupkSO-gf1D1AR6csd6g0AZyr5h3L8pfBDORsljN3cbBpgLYaJ-u_cUirYFfiIbocYlfj23MHlNZP5BtpsSk97mi-eIeeKa_lmMLhmCfsT3K1HGKkb75ukIEoZ7HAJi32cQVH266ZAWC66ts9X_J8fQYRNvZwl0ofPL8MOcCTl6awYTbW6aVphMTUKdXH6644J3v5HD0fa18sO5EmM7kgHXX09mi_XpJVNAIcXMwQ',
-  },
-  {
-    label: 'Iconic Edition',
-    nombre: 'Vestido Cutout Iconic',
-    src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDuI5L75cqM4NNPu-LQaHSd_Tj8J343xrpzLkximBtMZR2W7iiqS1RWbCShrFIOkjXOXPArQM6BuxnGrLXDq0m4IjBRzf0lGvjfVYA67EHu084kyVlghYG7er1CTWmDzyhSxY8ysc457YENylvgy-23cNeSu03ZGzIpcAcOQW4uQ65vixdE-wMMHXAgYs_MBn1oBqXaIRsXt-wxo43cIG_3tUVtwr9rEVB8JhhwnSuZYu88_SzZ542f-XDxNfJx8Kjfc7Rn7b8O8KQ',
-  },
-];
-
-const LOOK_VIDEOS = [
-  { id: 'vid1', src: '/video.mp4',  label: 'Look 01' },
-  { id: 'vid2', src: '/video2.mp4', label: 'Look 02' },
-  { id: 'vid3', src: '/video3.mp4', label: 'Look 03' },
-  { id: 'vid4', src: '/video4.mp4', label: 'Look 04' },
-];
+import { DEFAULT_HOME } from '@/lib/contenido';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -216,6 +185,7 @@ function VideoCard({ src, label }) {
 // ── Página principal ──────────────────────────────────────────────────────────
 
 export default function Home() {
+  const [content,        setContent]        = useState(DEFAULT_HOME);
   const [slideActual,    setSlideActual]    = useState(0);
   const [favs,           setFavs]           = useState([]);
   const [nightProds,     setNightProds]     = useState([]);
@@ -225,23 +195,36 @@ export default function Home() {
   const [loadingArchive, setLoadingArchive] = useState(true);
 
   const autoTimer = useRef(null);
+  const heroSlides = content.hero.slides;
+
+  // ── Contenido editable (Home) ─────────────────────────────────────────────
+  useEffect(() => {
+    fetch('/api/contenido?pagina=home')
+      .then((r) => r.json())
+      .then((data) => { if (data?.ok) setContent(data.data); })
+      .catch(() => {});
+  }, []);
 
   // ── Hero auto-slide ───────────────────────────────────────────────────────
   const startAuto = useCallback(() => {
     clearInterval(autoTimer.current);
     autoTimer.current = setInterval(
-      () => setSlideActual((s) => (s + 1) % HERO_SLIDES.length),
+      () => setSlideActual((s) => (s + 1) % heroSlides.length),
       4500,
     );
-  }, []);
+  }, [heroSlides.length]);
 
   useEffect(() => {
     startAuto();
     return () => clearInterval(autoTimer.current);
   }, [startAuto]);
 
+  useEffect(() => {
+    setSlideActual((s) => (s >= heroSlides.length ? 0 : s));
+  }, [heroSlides.length]);
+
   const goTo = (n) => {
-    setSlideActual((n + HERO_SLIDES.length) % HERO_SLIDES.length);
+    setSlideActual((n + heroSlides.length) % heroSlides.length);
     startAuto();
   };
 
@@ -270,8 +253,6 @@ export default function Home() {
       .finally(() => setLoadingArchive(false));
   }, []);
 
-  const slide = HERO_SLIDES[slideActual];
-
   return (
     <main>
 
@@ -284,14 +265,14 @@ export default function Home() {
       >
         {/* Izquierda: imagen */}
         <div className="relative overflow-hidden" style={{ minHeight: '60vw', maxHeight: '100vh' }}>
-          {HERO_SLIDES.map((s, i) => (
+          {heroSlides.map((s, i) => (
             <div
               key={i}
               className="absolute inset-0 transition-opacity duration-700"
               style={{ opacity: i === slideActual ? 1 : 0 }}
             >
               <Image
-                src={s.src}
+                src={s.imagen}
                 alt={s.nombre}
                 fill
                 className="object-cover object-top"
@@ -311,26 +292,27 @@ export default function Home() {
         {/* Derecha: texto */}
         <div className="flex flex-col justify-center px-6 py-10 md:px-16 md:py-0">
           <p className="font-label-md text-[11px] md:text-label-md uppercase tracking-[0.3em] mb-5 text-white/50">
-            Archive Editions — Autumn Winter ´26
+            {content.hero.kicker}
           </p>
           <h1
             className="font-display-lg text-white leading-none mb-3"
             style={{ fontSize: 'clamp(3rem, 9vw, 7.5rem)', letterSpacing: '-0.03em', fontWeight: 300 }}
           >
-            CITY<br />
-            IC<span style={{ display: 'inline-block', verticalAlign: 'middle', lineHeight: 0, marginBottom: '0.12em' }}>★</span>NS
+            {content.hero.titulo.split('\n').map((linea, i, arr) => (
+              <span key={i}>{linea}{i < arr.length - 1 && <br />}</span>
+            ))}
           </h1>
           <p
             className="font-body-lg text-white/50 mt-4 mb-8 max-w-xs"
             style={{ fontSize: 'clamp(14px, 2vw, 18px)', lineHeight: 1.7 }}
           >
-            Prendas que definen una ciudad. Diseñadas para mujeres que escriben su propio relato.
+            {content.hero.subtitulo}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 mb-10">
             <Link href="/productos"
               className="bg-white text-onyx-black px-8 py-3.5 font-label-md text-label-md uppercase tracking-widest hover:bg-platinum-grey transition-colors text-center">
-              Shop Collection
+              {content.hero.ctaLabel}
             </Link>
           </div>
 
@@ -345,7 +327,7 @@ export default function Home() {
               ←
             </button>
             <div className="flex gap-2">
-              {HERO_SLIDES.map((_, i) => (
+              {heroSlides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
@@ -369,7 +351,7 @@ export default function Home() {
               →
             </button>
             <span className="font-label-md text-[11px] text-white/40 ml-2">
-              {String(slideActual + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
+              {String(slideActual + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
             </span>
           </div>
         </div>
@@ -380,14 +362,10 @@ export default function Home() {
       ══════════════════════════════════════════════════════ */}
       <section className="bg-surface py-12 border-y border-platinum-grey">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          {[
-            { icon: 'payments',       title: '20% OFF',               desc: 'Abonando con transferencia bancaria' },
-            { icon: 'credit_card',    title: '3 & 6 CUOTAS',          desc: 'Sin interés con todas las tarjetas' },
-            { icon: 'local_shipping', title: 'ENVÍOS A TODO EL PAÍS', desc: 'Llegamos a cada rincón de Argentina' },
-          ].map((item) => (
-            <div key={item.title} className="flex flex-col items-center">
+          {content.valueProps.map((item) => (
+            <div key={item.titulo} className="flex flex-col items-center">
               <span className="material-symbols-outlined text-4xl mb-3">{item.icon}</span>
-              <h3 className="font-label-md text-label-md uppercase tracking-wider mb-1">{item.title}</h3>
+              <h3 className="font-label-md text-label-md uppercase tracking-wider mb-1">{item.titulo}</h3>
               <p className="font-body-md text-body-md text-on-surface-variant">{item.desc}</p>
             </div>
           ))}
@@ -402,17 +380,17 @@ export default function Home() {
 
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-headline-lg text-headline-lg uppercase tracking-[0.2em] mb-2">
-              SHOP THE LOOK
+              {content.shopTheLook.titulo}
             </h2>
             <p className="font-body-md text-body-md text-on-surface-variant uppercase tracking-widest">
-              Mirá nuestras prendas en movimiento
+              {content.shopTheLook.subtitulo}
             </p>
             <div className="w-24 h-px bg-primary mx-auto mt-6" />
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-            {LOOK_VIDEOS.map((v) => (
-              <VideoCard key={v.id} src={v.src} label={v.label} />
+            {content.shopTheLook.videos.map((v, i) => (
+              <VideoCard key={i} src={v.src} label={v.label} />
             ))}
           </div>
         </div>
@@ -424,9 +402,9 @@ export default function Home() {
       <section className="py-20 md:py-28 max-w-[1280px] mx-auto px-5 md:px-16">
         <div className="flex justify-between items-end mb-12 md:mb-16">
           <div>
-            <h2 className="font-headline-lg text-headline-lg uppercase tracking-tighter">FAVS ⋆˙⟡</h2>
+            <h2 className="font-headline-lg text-headline-lg uppercase tracking-tighter">{content.favs.titulo}</h2>
             <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-              Nuestros artículos más deseados de la temporada.
+              {content.favs.subtitulo}
             </p>
           </div>
           <Link href="/productos"
@@ -450,13 +428,13 @@ export default function Home() {
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-12 md:mb-16">
             <p className="font-label-md text-label-md uppercase tracking-[0.3em] mb-4 text-white/40">
-              The After Hours Edit
+              {content.night.kicker}
             </p>
             <h2
               className="font-headline-lg uppercase tracking-widest"
               style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)' }}
             >
-              NIGHT COLLECTION
+              {content.night.titulo}
             </h2>
             <div className="w-24 h-px bg-white/20 mx-auto mt-6" />
           </div>
@@ -513,7 +491,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link href="/productos?categoria=cat_noche"
               className="border border-white/30 px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-white hover:bg-white hover:text-onyx-black transition-colors inline-block">
-              Ver Night Collection
+              {content.night.ctaLabel}
             </Link>
           </div>
         </div>
@@ -526,7 +504,7 @@ export default function Home() {
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-14 md:mb-20">
             <h2 className="font-headline-lg text-headline-lg uppercase tracking-[0.2em]">
-              ⟡˙⋆ archive editions ⋆˙⟡
+              {content.archive.titulo}
             </h2>
             <div className="w-24 h-px bg-primary mx-auto mt-6" />
           </div>
@@ -582,7 +560,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link href="/productos?categoria=cat_archive"
               className="border border-primary px-10 py-4 font-label-md text-label-md uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-colors inline-block">
-              Ver Archive Editions
+              {content.archive.ctaLabel}
             </Link>
           </div>
         </div>
@@ -594,7 +572,7 @@ export default function Home() {
       <section className="py-20 md:py-28 bg-surface">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="font-headline-lg text-headline-lg uppercase tracking-[0.2em] mb-4">MEDIOS DE PAGO</h2>
+            <h2 className="font-headline-lg text-headline-lg uppercase tracking-[0.2em] mb-4">{content.mediosDePago.titulo}</h2>
             <div className="w-24 h-px bg-primary mx-auto" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10">

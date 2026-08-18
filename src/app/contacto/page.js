@@ -1,17 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { DEFAULT_CONTACTO } from '@/lib/contenido';
 
 const WHATSAPP  = '5493834615992';
 const INSTAGRAM = 'https://www.instagram.com/_chloe.showroom/';
 const MAPS      = 'https://www.google.com/maps/place/CHLOE+SHOWROOM/@-28.4506353,-65.7785153,20.56z/data=!4m15!1m8!3m7!1s0x942428a6b444e9df:0xb1208f9979278142!2sAlpatauca+870,+K4700+San+Fernando+del+Valle+de+Catamarca,+Catamarca!3b1!8m2!3d-28.450718!4d-65.7785373!16s%2Fg%2F11lmqd_d1_!3m5!1s0x9424297b1d2bf14d:0xdc52f50b8071aee9!8m2!3d-28.4506923!4d-65.7785747!16s%2Fg%2F11k9p2q35c';
-
-const HORARIOS = [
-  { dia: 'Lunes a Viernes',       hora: '18:00 – 22:00 hs' },
-  { dia: 'Sábados (Mañana)',      hora: '10:00 – 13:00 hs' },
-  { dia: 'Sábados (Tarde/Noche)', hora: '18:00 – 22:00 hs' },
-];
 
 const MOTIVOS = [
   { value: 'pedido',  label: 'Consulta sobre un pedido'       },
@@ -43,8 +38,16 @@ function IconInstagram({ className = 'w-5 h-5' }) {
 // ── Componente principal ──────────────────────────────────────────────────────
 
 export default function ContactoPage() {
+  const [content, setContent] = useState(DEFAULT_CONTACTO);
   const [formState, setFormState] = useState('idle'); // idle | sending | sent
   const [focusedField, setFocusedField] = useState('');
+
+  useEffect(() => {
+    fetch('/api/contenido?pagina=contacto')
+      .then((r) => r.json())
+      .then((data) => { if (data?.ok) setContent(data.data); })
+      .catch(() => {});
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -90,24 +93,24 @@ export default function ContactoPage() {
             </nav>
 
             <p className="font-label-md text-[11px] uppercase tracking-[0.3em] text-white/50 mb-6">
-              Chloe Showroom — Catamarca, Argentina
+              {content.hero.kicker}
             </p>
             <h1
               className="font-display-lg text-white leading-none mb-6"
               style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', letterSpacing: '-0.03em', fontWeight: 300 }}
             >
-              Hablemos.
+              {content.hero.titulo}
             </h1>
             <p
               className="font-body-lg text-white/60 max-w-xl mb-10"
               style={{ fontSize: 'clamp(15px, 2vw, 18px)', lineHeight: 1.8 }}
             >
-              Estamos para ayudarte con consultas de pedidos, tallas, envíos o simplemente para coordinar tu visita al showroom.
+              {content.hero.subtitulo}
             </p>
             <div className="inline-flex items-center gap-3 border border-white/20 px-5 py-2.5">
               <span className="material-symbols-outlined text-[18px] text-white/60">local_shipping</span>
               <span className="font-label-md text-[11px] uppercase tracking-[0.2em] text-white/70">
-                Realizamos envíos a todo el país
+                {content.hero.badge}
               </span>
             </div>
           </div>
@@ -126,10 +129,12 @@ export default function ContactoPage() {
             {/* Showroom */}
             <div className="space-y-4">
               <p className="font-label-md text-[10px] uppercase tracking-[0.25em] text-on-surface-variant">
-                Nuestro Showroom
+                {content.showroom.kicker}
               </p>
               <h2 className="font-headline-lg text-headline-lg leading-snug">
-                Alpatauca 870,<br />San Fernando del Valle<br />de Catamarca
+                {content.showroom.direccion.split('\n').map((linea, i, arr) => (
+                  <span key={i}>{linea}{i < arr.length - 1 && <br />}</span>
+                ))}
               </h2>
               <a
                 href={MAPS}
@@ -148,7 +153,7 @@ export default function ContactoPage() {
                 Horarios de Atención
               </p>
               <div>
-                {HORARIOS.map((h) => (
+                {content.horarios.map((h) => (
                   <div key={h.dia} className="flex justify-between py-3 border-b border-platinum-grey">
                     <span className="font-body-md text-body-md">{h.dia}</span>
                     <span className="font-body-md font-bold">{h.hora}</span>

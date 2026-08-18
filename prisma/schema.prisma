@@ -232,6 +232,15 @@ model ConfigTienda {
   updatedAt DateTime @updatedAt
 }
 
+model ContenidoSitio {
+  id        String   @id @default(cuid())
+  home      Json?
+  nosotros  Json?
+  contacto  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum EstadoPedido {
   PENDIENTE
   PAGADO

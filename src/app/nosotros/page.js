@@ -2,34 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { DEFAULT_NOSOTROS } from '@/lib/contenido';
 
 const MAPS = 'https://www.google.com/maps/place/CHLOE+SHOWROOM/@-28.4506353,-65.7785153,20.56z/data=!4m15!1m8!3m7!1s0x942428a6b444e9df:0xb1208f9979278142!2sAlpatauca+870,+K4700+San+Fernando+del+Valle+de+Catamarca,+Catamarca!3b1!8m2!3d-28.450718!4d-65.7785373!16s%2Fg%2F11lmqd_d1_!3m5!1s0x9424297b1d2bf14d:0xdc52f50b8071aee9!8m2!3d-28.4506923!4d-65.7785747!16s%2Fg%2F11k9p2q35c';
-
-const STATS = [
-  { num: '3+',  label: 'Años en Catamarca'       },
-  { num: '3',   label: 'Colecciones Activas'      },
-  { num: '∞',   label: 'Envíos a todo el país'    },
-  { num: '★',   label: 'Atención Personalizada'   },
-];
-
-const PILARES = [
-  {
-    icon: 'gallery_thumbnail',
-    titulo: 'Curaduría Exclusiva',
-    texto: 'No traemos cantidades, traemos calidad. Cada prenda es una pieza elegida bajo los estándares más altos del Urban Chic. Tu próximo favorito ya nos está esperando.',
-  },
-  {
-    icon: 'star_rate',
-    titulo: 'Preppy Moderno',
-    texto: 'Reinterpretamos los clásicos. Siluetas estructuradas y tejidos premium que definen un look atemporal pero siempre vigente, adaptado a la mujer de hoy.',
-  },
-  {
-    icon: 'local_shipping',
-    titulo: 'Alcance Nacional',
-    texto: 'Desde Catamarca para todo el país. Enviamos con cuidado cada detalle del packaging para que tu experiencia sea premium de principio a fin.',
-  },
-];
 
 const COLECCIONES = [
   {
@@ -111,6 +87,15 @@ function Reveal({ children, delay = 0, className = '' }) {
 
 // ── Página ────────────────────────────────────────────────────────────────────
 export default function NosotrosPage() {
+  const [content, setContent] = useState(DEFAULT_NOSOTROS);
+
+  useEffect(() => {
+    fetch('/api/contenido?pagina=nosotros')
+      .then((r) => r.json())
+      .then((data) => { if (data?.ok) setContent(data.data); })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-surface">
 
@@ -132,7 +117,7 @@ export default function NosotrosPage() {
 
           <Reveal delay={50}>
             <p className="font-label-md text-[11px] uppercase tracking-[0.3em] text-white/40 mb-6">
-              Catamarca, Argentina — Desde el primer día
+              {content.hero.kicker}
             </p>
           </Reveal>
           <Reveal delay={100}>
@@ -140,7 +125,7 @@ export default function NosotrosPage() {
               className="text-white leading-none mb-6"
               style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', letterSpacing: '-0.03em', fontWeight: 300 }}
             >
-              NOSOTROS.
+              {content.hero.titulo}
             </h1>
           </Reveal>
           <Reveal delay={150}>
@@ -148,7 +133,7 @@ export default function NosotrosPage() {
               className="font-body-lg text-white/60 max-w-sm mb-10"
               style={{ fontSize: 'clamp(14px, 1.8vw, 18px)', lineHeight: 1.8 }}
             >
-              Una boutique pensada para la mujer que transita la ciudad con confianza, estilo y autenticidad.
+              {content.hero.subtitulo}
             </p>
           </Reveal>
           <Reveal delay={200}>
@@ -176,7 +161,7 @@ export default function NosotrosPage() {
       <section className="border-b border-platinum-grey">
         <div className="max-w-[1280px] mx-auto px-5 md:px-16">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-platinum-grey">
-            {STATS.map((s, i) => (
+            {content.stats.map((s, i) => (
               <Reveal key={s.label} delay={i * 80} className="py-10 md:py-14 px-4 md:px-10 text-center">
                 <p
                   className="font-display-lg text-primary mb-1"
@@ -203,25 +188,23 @@ export default function NosotrosPage() {
           <Reveal className="md:col-span-5 space-y-8">
             <div>
               <p className="font-label-md text-[10px] uppercase tracking-[0.25em] text-on-surface-variant mb-4">
-                Nuestra Historia
+                {content.historia.kicker}
               </p>
               <h2
                 className="font-headline-lg uppercase leading-tight mb-6"
                 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}
               >
-                La Boutique
+                {content.historia.titulo}
               </h2>
               <div className="w-12 h-px bg-primary mb-8" />
             </div>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Situada en el corazón de San Fernando del Valle de Catamarca, Alpatauca 870 no es solo una dirección — es el refugio de la mujer moderna.
-            </p>
-            <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              En <strong className="text-primary font-bold">Chloe Showroom</strong> creemos que el estilo Urban Chic y la sofisticación Preppy no son opuestos, sino complementos de una identidad versátil y auténtica.
-            </p>
-            <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              Nuestra historia comenzó con la visión de curar prendas que hablen de calidad, durabilidad y tendencia. Cada pieza fue seleccionada personalmente, pensando en la mujer que transita la ciudad con confianza y elegancia.
-            </p>
+            {content.historia.parrafos.map((p, i) => (
+              <p key={i} className={i === 0
+                ? 'font-body-lg text-body-lg text-on-surface-variant leading-relaxed'
+                : 'font-body-md text-body-md text-on-surface-variant leading-relaxed'}>
+                {p}
+              </p>
+            ))}
             <div className="pt-4">
               <Link
                 href="/catalogo"
@@ -238,7 +221,7 @@ export default function NosotrosPage() {
           <Reveal delay={200} className="md:col-span-6 md:col-start-7 relative">
             <div className="relative overflow-hidden bg-surface-container" style={{ aspectRatio: '3/4' }}>
               <Image
-                src="https://lh3.googleusercontent.com/aida/ADBb0uj-xNipEI3TX-LtSWJ0hWIsTIeKr7EZ2k72YI0pE1fUbck3TENSwYa-8awYoEwG4GtsVEGvPj76_tp8VbJasEQ0hwfPfUr86M_UqEWdswVH4iCpc1PViFtYk7E6EA4yJA40_iJCpJ9ZM_pppYkRCDfg5FWGj5eJZtn9i1o4y2g4wi8Y_93raOscXNCC5lqndrigEIi2c7tFqgqS_dWBuQ9L2MicShZwnPJxtMLHe9HSkeozg2RMIp6lymQ"
+                src={content.historia.imagen}
                 alt="Experiencia Chloe Showroom"
                 fill
                 className="object-cover hover:scale-[1.03] transition-transform duration-700"
@@ -273,7 +256,7 @@ export default function NosotrosPage() {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-platinum-grey">
-            {PILARES.map((p, i) => (
+            {content.pilares.map((p, i) => (
               <Reveal key={p.titulo} delay={i * 100} className="py-10 px-8 md:px-12 space-y-5">
                 <div className="w-10 h-10 border border-platinum-grey flex items-center justify-center mb-6"
                   style={{ minHeight: 'unset', minWidth: 'unset' }}>
@@ -341,18 +324,20 @@ export default function NosotrosPage() {
 
             {/* Info */}
             <Reveal className="space-y-6">
-              <p className="font-label-md text-[10px] uppercase tracking-[0.25em] text-white/40">Vení a vernos</p>
+              <p className="font-label-md text-[10px] uppercase tracking-[0.25em] text-white/40">{content.cta.kicker}</p>
               <h2
                 className="text-white leading-tight"
                 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 300, letterSpacing: '-0.02em' }}
               >
-                Visitanos en<br />el Showroom
+                {content.cta.titulo.split('\n').map((linea, i, arr) => (
+                  <span key={i}>{linea}{i < arr.length - 1 && <br />}</span>
+                ))}
               </h2>
               <p
                 className="font-body-lg text-white/60 max-w-sm leading-relaxed"
                 style={{ fontSize: 'clamp(14px, 1.8vw, 18px)' }}
               >
-                Nuestro espacio está diseñado para que te sientas en casa mientras descubrís tu próximo look favorito.
+                {content.cta.subtitulo}
               </p>
               <div className="space-y-3 pt-2">
                 <div className="flex items-center gap-3">
