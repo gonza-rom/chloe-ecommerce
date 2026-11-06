@@ -1,7 +1,24 @@
 // src/lib/gocuotas.js
 // Go Cuotas no requiere auth previo — la API key va directo como Bearer token
 
+import { createHmac, timingSafeEqual } from 'crypto';
+
 const BASE = 'https://api-magento.gocuotas.com';
+
+// Firma el pedidoId con la API key (secreta) para que el webhook pueda
+// verificar que la notificación corresponde a un checkout creado por nosotros.
+export function firmarPedidoGoCuotas(pedidoId) {
+  const apiKey = process.env.GOCUOTAS_API_KEY;
+  if (!apiKey) throw new Error('Falta variable de entorno GOCUOTAS_API_KEY');
+  return createHmac('sha256', apiKey).update(`gocuotas:${pedidoId}`).digest('hex');
+}
+
+export function verificarFirmaGoCuotas(pedidoId, firma) {
+  if (!pedidoId || !firma || typeof firma !== 'string') return false;
+  const esperada = Buffer.from(firmarPedidoGoCuotas(pedidoId));
+  const recibida = Buffer.from(firma);
+  return esperada.length === recibida.length && timingSafeEqual(esperada, recibida);
+}
 
 async function safeJson(res) {
   const text = await res.text();

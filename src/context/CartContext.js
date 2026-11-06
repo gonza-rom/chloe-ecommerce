@@ -84,13 +84,33 @@ export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  // Cargar carrito del localStorage
+  // Cargar carrito del localStorage y actualizar precios/descuentos desde el servidor
+  // (un carrito guardado puede tener precios viejos; el checkout cobra los actuales)
   useEffect(() => {
     const saved = localStorage.getItem('hoky-cart');
-    if (saved) {
-      try { setCart(JSON.parse(saved)); }
-      catch { localStorage.removeItem('hoky-cart'); }
-    }
+    if (!saved) return;
+    let items;
+    try { items = JSON.parse(saved); }
+    catch { localStorage.removeItem('hoky-cart'); return; }
+    if (!Array.isArray(items)) { localStorage.removeItem('hoky-cart'); return; }
+    setCart(items);
+
+    const productoIds = [...new Set(items.map(i => String(i.id).split('-')[0]))];
+    Promise.all(productoIds.map(id =>
+      fetch(`/api/productos/${id}`).then(r => (r.ok ? r.json() : null)).catch(() => null)
+    )).then(productos => {
+      const porId = Object.fromEntries(productos.filter(Boolean).map(p => [p.id, p]));
+      setCart(prev => prev.map(item => {
+        const p = porId[String(item.id).split('-')[0]];
+        if (!p) return item;
+        const v = item.varianteId ? p.variantes?.find(x => x.id === item.varianteId) : null;
+        return {
+          ...item,
+          precio:            v?.precio ?? p.precio,
+          descuentoEfectivo: p.descuentoEfectivo,
+        };
+      }));
+    });
   }, []);
 
   // Guardar carrito en localStorage

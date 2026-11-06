@@ -21,6 +21,20 @@ export function calcularPrecios(precioBase, descuentoPorcentaje = DESCUENTO_EFEC
 }
 
 /**
+ * Regla única de precios (la usan la página de producto, el checkout y el servidor):
+ * efectivo/transferencia = precio base con el % de descuento del producto; el resto = precio base.
+ */
+export function precioSegunMetodo(precioBase, descuentoPorcentaje, metodoPago) {
+  if (metodoPago === 'efectivo' || metodoPago === 'transferencia') {
+    const d = Number.isFinite(descuentoPorcentaje)
+      ? Math.max(0, Math.min(100, descuentoPorcentaje))
+      : DESCUENTO_EFECTIVO_DEFAULT;
+    return Math.round(precioBase * (1 - d / 100));
+  }
+  return precioBase;
+}
+
+/**
  * Dado un producto y un método de pago, devuelve el precio a cobrar.
  */
 export function getPrecioSegunMetodo(producto, metodoPago) {

@@ -61,8 +61,11 @@ export async function GET(request) {
 
     } else {
       // Geocoding inverso
-      const lat = searchParams.get('lat');
-      const lng = searchParams.get('lng');
+      const lat = parseFloat(searchParams.get('lat'));
+      const lng = parseFloat(searchParams.get('lng'));
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return NextResponse.json({}, { status: 200 });
+      }
 
       const res = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`,

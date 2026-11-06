@@ -118,7 +118,9 @@ function SocialBtn({ onClick, loading, children }) {
 function LoginContent() {
   const router       = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo   = searchParams.get('redirect') ?? '/cuenta';
+  const redirectParam = searchParams.get('redirect') ?? '';
+  // Solo rutas internas: evita redirecciones a sitios externos
+  const redirectTo   = /^\/(?![\/\\])/.test(redirectParam) ? redirectParam : '/cuenta';
 
   const [tab,       setTab]       = useState('login');
   const [email,     setEmail]     = useState('');

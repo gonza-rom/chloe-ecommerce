@@ -17,6 +17,13 @@ const APP_URL   = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 const resend = API_KEY ? new Resend(API_KEY) : null;
 
+// Escapa texto ingresado por usuarios antes de insertarlo en el HTML del email
+function esc(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 function fmtPrecio(n) {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency', currency: 'ARS', maximumFractionDigits: 0,
@@ -41,8 +48,8 @@ function itemsFilaHtml(items) {
   return items.map(i => `
     <tr>
       <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;color:#111;">
-        ${i.nombre}${i.talle ? ` · Talle ${i.talle}` : ''}${i.color ? ` · ${i.color}` : ''}
-        <span style="color:#999;"> ×${i.cantidad}</span>
+        ${esc(i.nombre)}${i.talle ? ` · Talle ${esc(i.talle)}` : ''}${i.color ? ` · ${esc(i.color)}` : ''}
+        <span style="color:#999;"> ×${esc(i.cantidad)}</span>
       </td>
       <td style="padding:10px 0;border-bottom:1px solid #eee;font-size:14px;color:#111;text-align:right;white-space:nowrap;">
         ${fmtPrecio(i.subtotal ?? i.precio * i.cantidad)}
@@ -66,9 +73,9 @@ function templatePedidoNuevo(pedido, items) {
       <tr>
         <td style="padding:28px;">
           <table role="presentation" width="100%" style="margin-bottom:20px;">
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Cliente</td><td style="font-size:13px;color:#111;text-align:right;font-weight:600;">${pedido.compradorNombre}</td></tr>
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Teléfono</td><td style="font-size:13px;color:#111;text-align:right;">${pedido.compradorTelefono ?? '—'}</td></tr>
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Email</td><td style="font-size:13px;color:#111;text-align:right;">${pedido.compradorEmail}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Cliente</td><td style="font-size:13px;color:#111;text-align:right;font-weight:600;">${esc(pedido.compradorNombre)}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Teléfono</td><td style="font-size:13px;color:#111;text-align:right;">${esc(pedido.compradorTelefono ?? '—')}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Email</td><td style="font-size:13px;color:#111;text-align:right;">${esc(pedido.compradorEmail)}</td></tr>
             <tr><td style="font-size:13px;color:#888;padding:3px 0;">Pago</td><td style="font-size:13px;color:#111;text-align:right;">${METODO_LABEL[pedido.metodoPago] ?? pedido.metodoPago}</td></tr>
             <tr><td style="font-size:13px;color:#888;padding:3px 0;">Entrega</td><td style="font-size:13px;color:#111;text-align:right;">${ENTREGA_LABEL[pedido.tipoEnvio] ?? pedido.tipoEnvio ?? '—'}</td></tr>
           </table>
@@ -202,12 +209,12 @@ function templateContacto({ nombre, email, asunto, mensaje }) {
       <tr>
         <td style="padding:28px;">
           <table role="presentation" width="100%" style="margin-bottom:20px;">
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Nombre</td><td style="font-size:13px;color:#111;text-align:right;font-weight:600;">${nombre}</td></tr>
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Email</td><td style="font-size:13px;color:#111;text-align:right;">${email}</td></tr>
-            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Motivo</td><td style="font-size:13px;color:#111;text-align:right;">${MOTIVO_LABEL[asunto] ?? asunto ?? '—'}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Nombre</td><td style="font-size:13px;color:#111;text-align:right;font-weight:600;">${esc(nombre)}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Email</td><td style="font-size:13px;color:#111;text-align:right;">${esc(email)}</td></tr>
+            <tr><td style="font-size:13px;color:#888;padding:3px 0;">Motivo</td><td style="font-size:13px;color:#111;text-align:right;">${esc(MOTIVO_LABEL[asunto] ?? asunto ?? '—')}</td></tr>
           </table>
           <div style="border-top:2px solid #111;padding-top:16px;">
-            <p style="font-size:14px;color:#111;line-height:1.7;white-space:pre-wrap;margin:0;">${mensaje}</p>
+            <p style="font-size:14px;color:#111;line-height:1.7;white-space:pre-wrap;margin:0;">${esc(mensaje)}</p>
           </div>
         </td>
       </tr>

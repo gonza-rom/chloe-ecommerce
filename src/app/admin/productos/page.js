@@ -128,7 +128,7 @@ export default function AdminProductosPage() {
       precio:            parseFloat(form.precio),
       precioAnterior:    form.precioAnterior ? parseFloat(form.precioAnterior) : null,
       costo:             form.costo ? parseFloat(form.costo) : null,
-      descuentoEfectivo: parseFloat(form.descuentoEfectivo) || 10,
+      descuentoEfectivo: Number.isFinite(parseFloat(form.descuentoEfectivo)) ? parseFloat(form.descuentoEfectivo) : 10,
       stock:             form.tieneVariantes ? 0 : parseInt(form.stock) || 0,
       stockMinimo:       parseInt(form.stockMinimo) || 1,
       variantes:         form.tieneVariantes ? variantes.map(v => ({
@@ -479,8 +479,8 @@ export default function AdminProductosPage() {
                     <div className="precios-preview">
                       {[
                         { label: 'Tarjeta / MP',  precio: parseFloat(form.precio) },
-                        { label: 'Transferencia', precio: Math.round(parseFloat(form.precio) * (1 - (parseFloat(form.descuentoEfectivo) || 10) / 100)) },
-                        { label: 'Efectivo',      precio: Math.round(parseFloat(form.precio) * (1 - (parseFloat(form.descuentoEfectivo) || 10) / 100)) },
+                        { label: 'Transferencia', precio: Math.round(parseFloat(form.precio) * (1 - (Number.isFinite(parseFloat(form.descuentoEfectivo)) ? parseFloat(form.descuentoEfectivo) : 10) / 100)) },
+                        { label: 'Efectivo',      precio: Math.round(parseFloat(form.precio) * (1 - (Number.isFinite(parseFloat(form.descuentoEfectivo)) ? parseFloat(form.descuentoEfectivo) : 10) / 100)) },
                       ].map(({ label, precio }) => (
                         <div key={label} style={{ background: '#fff', borderRadius: 8, padding: '8px 10px', textAlign: 'center' }}>
                           <p style={{ fontSize: 10, color: '#888', margin: '0 0 3px' }}>{label}</p>

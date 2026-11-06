@@ -1,54 +1,23 @@
 // src/app/api/payway/webhook/route.js
-// Recibe notificaciones de Payway cuando un pago se completa/rechaza
+// Recibe notificaciones de Payway.
+//
+// IMPORTANTE: este endpoint es público y Payway no firma las notificaciones,
+// así que NO se usa para cambiar el estado de los pedidos (cualquiera podría
+// mandar un POST con status "approved"). El pedido se marca como PAGADO en
+// /api/payway/pago, con la respuesta que devuelve Payway directamente.
+// Acá solo se registra la notificación para poder auditarla.
 
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 
 export async function POST(request) {
   try {
     const body = await request.json();
     console.log('Payway webhook recibido:', JSON.stringify(body));
-
-    // Payway envía el estado del pago en el webhook
-    // Los campos varían según el evento, los más importantes:
-    const {
-      id,                  // payment_id de Payway
-      site_transaction_id, // tu pedidoId
-      status,              // approved / rejected / cancelled
-      amount,
-    } = body;
-
-    if (!site_transaction_id) {
-      return NextResponse.json({ ok: true }); // ignorar si no trae ID
-    }
-
-    // Mapear estado de Payway a tu modelo
-    const estadoMap = {
-      approved:  'PAGADO',
-      rejected:  'CANCELADO',
-      cancelled: 'CANCELADO',
-      pending:   'PENDIENTE',
-    };
-
-    const nuevoEstado = estadoMap[status?.toLowerCase()] ?? 'PENDIENTE';
-
-    // Actualizar el pedido en la base de datos
-    await prisma.pedido.update({
-      where: { id: site_transaction_id },
-      data: {
-        estado:          nuevoEstado,
-        paywayPaymentId: String(id ?? ''),
-        updatedAt:       new Date(),
-      },
-    });
-
-    return NextResponse.json({ ok: true });
-
   } catch (error) {
     console.error('Error webhook Payway:', error);
-    // Siempre responder 200 a Payway aunque falle internamente
-    return NextResponse.json({ ok: true });
   }
+  // Siempre responder 200 a Payway
+  return NextResponse.json({ ok: true });
 }
 
 // Payway a veces hace GET para verificar que el endpoint existe

@@ -2,19 +2,35 @@
 // Llama directo a la API de Payway sin SDK (el SDK sobreescribe los items de Cybersource)
 
 import { NextResponse } from 'next/server';
+import { prisma }       from '@/lib/prisma';
 
 export async function POST(request) {
   try {
     const body = await request.json();
     const {
-      pedidoId, token, bin, paymentMethodId, installments, total,
-      compradorEmail, compradorNombre, tipoEnvio, direccion, items,
+      pedidoId, token, bin, installments,
+      compradorEmail, compradorNombre, tipoEnvio, direccion,
       deviceFingerprint,
     } = body;
 
-    if (!pedidoId || !token || !total) {
+    if (!pedidoId || !token) {
       return NextResponse.json({ ok: false, error: 'Datos incompletos' }, { status: 400 });
     }
+
+    // El monto y los items salen SIEMPRE de la BD, nunca del cliente
+    const pedido = await prisma.pedido.findUnique({
+      where:   { id: pedidoId },
+      include: { items: true },
+    });
+    if (!pedido) {
+      return NextResponse.json({ ok: false, error: 'Pedido no encontrado' }, { status: 404 });
+    }
+    if (pedido.estado !== 'PENDIENTE') {
+      return NextResponse.json({ ok: false, error: 'Este pedido ya fue procesado' }, { status: 409 });
+    }
+
+    const total = pedido.total;
+    const items = pedido.items;
 
     const privateKey  = process.env.PAYWAY_PRIVATE_KEY;
     const amount = Math.round(total * 100); // en centavos: $25.50 → 2550
@@ -38,7 +54,7 @@ export async function POST(request) {
       street2:      '',
     };
 
-    const csItems = (items || [{ nombre: 'Chloe Showroom', cantidad: 1, precio: total }]).map((item, i) => ({
+    const csItems = (items.length ? items : [{ nombre: 'Chloe Showroom', cantidad: 1, precio: total }]).map((item, i) => ({
       code:         `CHLOE${String(i + 1).padStart(3, '0')}`,
       name:         (item.nombre || 'Indumentaria').slice(0, 255),
       description:  (item.nombre || 'Indumentaria').slice(0, 255),
@@ -120,6 +136,13 @@ export async function POST(request) {
     const status = result?.status?.toLowerCase();
 
     if (status === 'approved') {
+      // La respuesta viene directo de Payway (autenticada con nuestra clave privada),
+      // así que es la fuente confiable para marcar el pedido como pagado.
+      await prisma.pedido.update({
+        where: { id: pedido.id },
+        data:  { estado: 'PAGADO', pagadoAt: new Date() },
+      });
+      console.log(`[Payway] Pedido ${pedido.id} → PAGADO (pago ${result.id})`);
       return NextResponse.json({ ok: true, status: 'approved', paymentId: result.id });
     }
 

@@ -5,14 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingBag, Eye } from 'lucide-react';
 import { getImagenesValidas } from './ProductGallery';
+import { precioSegunMetodo } from '@/lib/precios';
 
 export default function ProductCard({ producto, onAddToCart }) {
   const images          = getImagenesValidas(producto);
   const imagenPrincipal = images[0] || null;
 
-  // Precio con descuento (efectivo / transferencia)
-  const descuento      = producto.descuentoEfectivo ?? 20;
-  const precioEfectivo = Math.round(producto.precio * (1 - descuento / 100));
+  // Precio con descuento (efectivo / transferencia) — misma regla que el checkout
+  const precioEfectivo = precioSegunMetodo(producto.precio, producto.descuentoEfectivo, 'transferencia');
 
   // Cuotas sin interés
   const cuotas      = 3;
@@ -163,14 +163,24 @@ export default function ProductCard({ producto, onAddToCart }) {
             </p>
           )}
 
-          {/* Botón agregar al carrito */}
-          <button
-            onClick={(e) => { e.preventDefault(); onAddToCart(producto, 1); }}
-            disabled={producto.stock === 0}
-            className="mt-2 w-full bg-black hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-full text-xs tracking-wide uppercase transition-colors"
-          >
-            {producto.stock === 0 ? 'Sin stock' : 'Comprar'}
-          </button>
+          {/* Botón agregar al carrito.
+              Si el producto tiene talles/colores, hay que elegirlos en la página del producto. */}
+          {producto.tieneVariantes && producto.stock > 0 ? (
+            <Link
+              href={`/productos/${producto.id}`}
+              className="mt-2 block w-full text-center bg-black hover:bg-gray-800 text-white font-semibold py-2.5 rounded-full text-xs tracking-wide uppercase transition-colors"
+            >
+              Comprar
+            </Link>
+          ) : (
+            <button
+              onClick={(e) => { e.preventDefault(); onAddToCart(producto, 1); }}
+              disabled={producto.stock === 0}
+              className="mt-2 w-full bg-black hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-full text-xs tracking-wide uppercase transition-colors"
+            >
+              {producto.stock === 0 ? 'Sin stock' : 'Comprar'}
+            </button>
+          )}
         </div>
       </div>
     </div>

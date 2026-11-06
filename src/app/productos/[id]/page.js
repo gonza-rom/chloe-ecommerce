@@ -13,6 +13,7 @@ import {
 import { useCart } from '@/context/CartContext';
 import { COLOR_MAP } from '@/lib/colorMap';
 import { createClient } from '@/lib/supabase/client';
+import { precioSegunMetodo, DESCUENTO_EFECTIVO_DEFAULT } from '@/lib/precios';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -378,8 +379,9 @@ export default function ProductoDetallePage() {
 
   const stockEfectivo = tieneVariantes ? (varianteSeleccionada?.stock ?? 0) : (producto?.stock ?? 0);
   const precioBase    = varianteSeleccionada?.precio ?? producto?.precio ?? 0;
-  const descuento     = 20; // siempre 20%, no depende del caché
-  const precioTransf  = Math.round(precioBase * (1 - descuento / 100));
+  // % de descuento configurado en el admin para este producto (mismo que cobra el checkout)
+  const descuento     = producto?.descuentoEfectivo ?? DESCUENTO_EFECTIVO_DEFAULT;
+  const precioTransf  = precioSegunMetodo(precioBase, descuento, 'transferencia');
   const ahorro        = precioBase - precioTransf;
   const precio3c      = Math.round(precioBase / 3);
 

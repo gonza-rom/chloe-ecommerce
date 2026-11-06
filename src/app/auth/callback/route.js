@@ -6,7 +6,10 @@ import { prisma }       from '@/lib/prisma';
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
   const code     = searchParams.get('code');
-  const redirect = searchParams.get('redirect') ?? '/cuenta';
+  // Solo rutas internas: evita redirecciones a sitios externos
+  // (ej. ?redirect=@evil.com o ?redirect=//evil.com)
+  const redirectParam = searchParams.get('redirect') ?? '';
+  const redirect = /^\/(?![\/\\])/.test(redirectParam) ? redirectParam : '/cuenta';
 
   if (code) {
     const supabase = await createClient();

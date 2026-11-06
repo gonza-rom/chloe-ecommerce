@@ -15,16 +15,11 @@ import { createClient } from '@/lib/supabase/client';
 import { calcularEnvio, PROVINCIAS_AR } from '@/lib/envio';
 import PaywayForm from '@/components/PaywayForm';
 import MapaEntregaLocal from '@/components/MapaEntregaLocal';
+import { precioSegunMetodo, DESCUENTO_EFECTIVO_DEFAULT as DESCUENTO_DEFAULT } from '@/lib/precios';
 
-const DESCUENTO_DEFAULT = 20;
-
+// Misma regla que usa el servidor en /api/checkout
 function getPrecioItem(item, metodoPago) {
-  if (metodoPago === 'efectivo' || metodoPago === 'transferencia') {
-    if (item.precioEfectivo) return item.precioEfectivo;
-    const descuento = item.descuentoEfectivo ?? DESCUENTO_DEFAULT;
-    return Math.round(item.precio * (1 - descuento / 100));
-  }
-  return item.precio;
+  return precioSegunMetodo(item.precio, item.descuentoEfectivo, metodoPago);
 }
 
 const fmt = (n) =>
@@ -510,11 +505,7 @@ async function confirmar() {
 
         const resGC = await fetch('/api/gocuotas/create', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            pedidoId:       dataPedido.pedidoId,
-            total,
-            compradorEmail: form.email.trim(),
-          }),
+          body: JSON.stringify({ pedidoId: dataPedido.pedidoId }),
         });
         const dataGC = await resGC.json();
         if (!dataGC.ok) { setError(dataGC.error ?? 'Error al conectar con Go Cuotas'); return; }
